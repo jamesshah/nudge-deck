@@ -4,9 +4,7 @@ node_modules/
 .DS_Store
 
 # Xcode / XcodeGen
-ios/NudgeDeck/NudgeDeck.xcodeproj/
 ios/NudgeDeck/build/
-ios/NudgeDeck/Support/Info.plist
 ios/NudgeDeck/Config/Local.xcconfig
 DerivedData/
 xcuserdata/

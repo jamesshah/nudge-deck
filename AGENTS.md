@@ -38,20 +38,20 @@ npx convex run seed:run
 
 ```bash
 cd ios/NudgeDeck
-xcodegen generate
+xcodegen generate   # after editing project.yml; commit .xcodeproj + Support/Info.plist
 open NudgeDeck.xcodeproj
 # tests:
 xcodebuild test -project NudgeDeck.xcodeproj -scheme NudgeDeck \
   -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
-Preview-only stores (`GameStore(previewCouple:)`, `SessionStore(previewState:)`) must not create a Convex client. Sample data lives in `Preview Content/PreviewFixtures.swift` behind `#if DEBUG`.
+`NudgeDeck.xcodeproj` and `Support/Info.plist` are **tracked** (Xcode Cloud needs them). After changing `project.yml`, regenerate and commit both. Preview-only stores (`GameStore(previewCouple:)`, `SessionStore(previewState:)`) must not create a Convex client. Sample data lives in `Preview Content/PreviewFixtures.swift` behind `#if DEBUG`.
 
 ## Auth & config notes
 
 - Dev sign-in needs **both** app `ENABLE_DEV_SIGNIN` and backend `ALLOW_DEV_SIGNIN=true`.
 - Override Convex URL locally via gitignored `ios/NudgeDeck/Config/Local.xcconfig` (see README for the `$()` xcconfig `//` trick).
-- Default shared deployment URL is in `Config/App.xcconfig`; do not point personal experiments at production without intent.
+- `Config/App.xcconfig` is the **staging / TestFlight** Convex URL; keep `ALLOW_DEV_SIGNIN` off on that deployment. App Store production URL goes in `Config/Production.xcconfig` later (see README).
 
 ## When changing rules
 

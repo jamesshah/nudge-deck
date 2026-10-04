@@ -36,8 +36,11 @@ backend/            Convex backend
     seedData.ts     the original 60-card Nudge Deck
     game.test.ts    rule tests (convex-test + vitest)
 ios/NudgeDeck/       SwiftUI app
-  project.yml       XcodeGen project spec
-  Config/App.xcconfig   CONVEX_URL build setting
+  project.yml       XcodeGen project spec (edit this, then regenerate)
+  NudgeDeck.xcodeproj/  generated project (committed for Xcode Cloud)
+  Support/Info.plist    generated (committed)
+  Config/App.xcconfig   staging / TestFlight CONVEX_URL + team
+  Config/Production.xcconfig  future App Store Convex URL (not wired yet)
   NudgeDeck/         app sources
   NudgeDeckTests/    unit tests
 ```
@@ -58,13 +61,13 @@ npx convex env set ALLOW_DEV_SIGNIN true   # allow the name-only test sign-in on
 
 Use `npx convex dev` for development. `npx convex deploy` is for production only.
 
-### Deploying to the shared deployment
+### Deploying to the shared (staging / TestFlight) deployment
 
-The app points at `https://loyal-lapwing-231.convex.cloud` by default. With a deploy key for that deployment (Convex dashboard, then Settings, then Deploy keys):
+`Config/App.xcconfig` points at `https://loyal-lapwing-231.convex.cloud`. That URL is the **staging** backend used by Debug defaults and by **TestFlight** (Release) builds. Do not set `ALLOW_DEV_SIGNIN=true` on it. With a deploy key for that deployment (Convex dashboard, then Settings, then Deploy keys):
 
 ```bash
 cd backend
-export CONVEX_DEPLOY_KEY=...        # production deploy key for loyal-lapwing-231
+export CONVEX_DEPLOY_KEY=...        # deploy key for loyal-lapwing-231
 npx convex deploy
 npx convex run seed:run
 ```
@@ -88,25 +91,35 @@ subscription and therefore works only while the app process is running.
 
 ## iOS app (Mac setup)
 
-Requires Xcode 15 or later with an iOS 17+ Simulator runtime, and [XcodeGen](https://github.com/yonaskolb/XcodeGen).
+Requires Xcode 15 or later with an iOS 17+ Simulator runtime. The generated `NudgeDeck.xcodeproj` and `Support/Info.plist` are committed so Xcode Cloud can archive without running XcodeGen. After editing `project.yml`, regenerate and **commit** both:
 
 ```bash
-brew install xcodegen
+brew install xcodegen   # once
 cd ios/NudgeDeck
 xcodegen generate
+git add NudgeDeck.xcodeproj Support/Info.plist
 open NudgeDeck.xcodeproj
 ```
 
-Run the tests from the command line:
+A fresh clone can open the committed project without XcodeGen. Run tests:
 
 ```bash
 cd ios/NudgeDeck
-xcodegen generate
 xcodebuild test -project NudgeDeck.xcodeproj -scheme NudgeDeck \
   -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
 Swift Package Manager fetches ConvexMobile on first build.
+
+### Staging vs production Convex
+
+| Build | Xcode configuration | xcconfig | Backend |
+| --- | --- | --- | --- |
+| Local Debug | Debug | `App.xcconfig` (+ optional `Local.xcconfig`) | staging or local |
+| TestFlight | **Release** | **`App.xcconfig`** | staging (`loyal-lapwing-231`) |
+| App Store (later) | **AppStore** (add when ready) | **`Production.xcconfig`** | production deployment |
+
+TestFlight and App Store both archive as Release-style builds today, so Debug vs Release alone cannot split backends. Keep TestFlight on Release + `App.xcconfig`. When you have a production Convex URL, fill in `Config/Production.xcconfig`, add an `AppStore` configuration in `project.yml`, regenerate/commit the project, and use a **separate** Xcode Cloud workflow that archives `AppStore` (manual / `appstore-*` tags) so you do not burn free hours by accident.
 
 ### Canvas previews
 
@@ -114,7 +127,7 @@ Every screen and its main subviews have `#Preview` blocks that run offline. `Gam
 
 ### Pointing at a different backend
 
-`CONVEX_URL` lives in `ios/NudgeDeck/Config/App.xcconfig`. To override it without touching the repo, create `ios/NudgeDeck/Config/Local.xcconfig` (gitignored):
+Staging `CONVEX_URL` and `DEVELOPMENT_TEAM` live in `ios/NudgeDeck/Config/App.xcconfig`. To override the URL without touching the repo, create `ios/NudgeDeck/Config/Local.xcconfig` (gitignored):
 
 ```
 CONVEX_URL = http:/$()/127.0.0.1:3210
@@ -156,19 +169,14 @@ Screenshots of each step are attached to the test result.
 Both need a paid Apple Developer account and a signed build.
 
 1. In the Apple Developer portal, enable **Sign in with Apple** and **Push Notifications** for the App ID `com.jamesshah.nudgedeck` (or your own bundle ID; update `PRODUCT_BUNDLE_IDENTIFIER` in `project.yml`, `APPLE_BUNDLE_ID`, and `APNS_TOPIC` in Convex to match).
-2. Create `ios/NudgeDeck/Config/Local.xcconfig`:
-   ```
-   DEVELOPMENT_TEAM = ABCDE12345
-   ```
-   `CODE_SIGN_ENTITLEMENTS` is already configured in `project.yml`; Debug builds use
-   the development APNs environment and Release builds use production.
+2. `DEVELOPMENT_TEAM` is set in `Config/App.xcconfig`. `CODE_SIGN_ENTITLEMENTS` is in `project.yml`; Debug uses the development APNs environment and Release/TestFlight use production. One APNs Auth Key (`.p8`) covers sandbox and production; the app reports which host to use.
 3. In the Apple Developer portal, create an APNs auth key (Keys, then +, then
    **Apple Push Notifications service (APNs)**) and download its `.p8` file. Apple
    only lets you download this file once.
 4. Set the provider credentials on the same Convex deployment the app uses:
    ```bash
    cd backend
-   npx convex env set APNS_TEAM_ID ABCDE12345
+   npx convex env set APNS_TEAM_ID YOUR_TEAM_ID
    npx convex env set APNS_KEY_ID 1A2BC3D4E5
    # Use --from-file. Do not pass the PEM as a CLI argument: lines starting
    # with ----- are parsed as flags ("unknown option" / looks like a denial).
@@ -176,11 +184,9 @@ Both need a paid Apple Developer account and a signed build.
    npx convex env set APNS_PRIVATE_KEY --from-file /absolute/path/to/AuthKey_1A2BC3D4E5.p8
    npx convex env set APNS_TOPIC com.jamesshah.nudgedeck
    ```
-   James must provide: the paid Apple Developer **Team ID**, the downloaded APNs
-   **`.p8` private key**, its **Key ID**, and the app's exact **bundle ID/topic**.
    The `.p8` must include the `-----BEGIN PRIVATE KEY-----` /
    `-----END PRIVATE KEY-----` lines.
-5. Run `xcodegen generate` and build to a real device. Grant notification permission
+5. Open the committed `NudgeDeck.xcodeproj` (or regenerate after `project.yml` changes) and build to a real device. Grant notification permission
    when prompted. The app registers with APNs, stores the device token in Convex, and
    the backend sends through the sandbox or production APNs host as appropriate.
 
@@ -199,3 +205,55 @@ The checked-in sample includes an alert, sound, badge, bundle target, and exampl
 the iOS entitlement, authorization, background presentation, and tap-routing path. It
 does not prove the Convex-to-APNs provider connection; that requires the four
 credentials above.
+
+## Xcode Cloud → TestFlight (25 free hours)
+
+One workflow archives **Release** (`App.xcconfig` staging Convex) once and posts to **both** TestFlight Internal and External. That does not double compute hours. Stay under 25 hours/month by avoiding PR/branch build matrices and skipping cloud tests (`NudgeDeckSmoke` needs local Convex).
+
+### Hour policy
+
+- **Actions:** Archive only (no Test action)
+- **Start conditions:** Manual + Git tags matching `tf-*` (branch changes off)
+- **Distribution:** Internal + External post-actions on the same archive
+- Roughly 2–4 tagged builds per week stays well under 25 hours
+
+### Cut a build
+
+```bash
+git tag tf-0.1.0.1
+git push origin tf-0.1.0.1
+```
+
+Or start the workflow manually from Xcode / App Store Connect.
+
+### 1. App Store Connect TestFlight groups
+
+In [App Store Connect](https://appstoreconnect.apple.com) → **Nudge Deck** → **TestFlight**:
+
+1. **Internal Testing** — create a group (e.g. “Team”). Add App Store Connect users on the team. Internal builds are available after processing (no Beta App Review).
+2. **External Testing** — create a group (e.g. “Beta”). Add email testers or a public link later. Fill **What to Test**, contact info, and export compliance / encryption answers (HTTPS-only apps typically use the standard exemption answers).
+3. The **first** build sent to External goes through **Beta App Review**. Later builds to the same group often skip a full review unless metadata changes significantly.
+
+External testers hit the **staging** Convex backend while this workflow uses `App.xcconfig`.
+
+### 2. Create the Xcode Cloud workflow
+
+Prerequisites: git remote is `jamesshah/nudge-deck`, `NudgeDeck.xcodeproj` is on the branch you build, paid Apple Developer account.
+
+1. Open `ios/NudgeDeck/NudgeDeck.xcodeproj` in Xcode.
+2. Confirm Signing & Capabilities: team selected, Automatic signing, Sign in with Apple + Push present.
+3. **Product → Xcode Cloud → Create Workflow** (or App Store Connect → app → Xcode Cloud).
+4. Grant Xcode Cloud access to **`jamesshah/nudge-deck`** if prompted.
+5. Workflow settings:
+   - **Name:** `TestFlight`
+   - **Project / scheme:** `NudgeDeck.xcodeproj` / **`NudgeDeck`**
+   - **Environment:** latest stable Xcode / macOS; pin versions once a build succeeds
+   - **Start conditions:** Manual **on**; Branch changes **off**; Tag changes **on** with `tf-*`
+   - **Actions:** Archive → iOS → **Release**; Deployment Preparation = **TestFlight External Testing** (not Internal-only)
+   - **Post-Actions:**
+     - TestFlight Internal Testing → your Internal group
+     - TestFlight External Testing → your External group
+6. Start a manual run. Confirm archive upload, then Internal install after processing; External after Beta App Review (first time).
+7. Verify Sign in with Apple and push against staging Convex (Release uses production APNs host; one Auth Key covers both hosts).
+
+Do **not** put APNs `.p8` keys in Xcode Cloud env — push credentials stay on Convex.
