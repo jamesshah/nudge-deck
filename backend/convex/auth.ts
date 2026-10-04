@@ -86,13 +86,17 @@ export const upsertAppleUser = internalMutation({
     let userId: Id<"users">;
     if (existing) {
       userId = existing._id;
+      // Upgrade the placeholder if Apple/client finally sends a real name; don't
+      // overwrite a name the user chose in Settings.
+      const shouldSetName = !!args.name && existing.name === "Player";
       await ctx.db.patch("users", userId, {
         timeZone: args.timeZone,
         utcOffsetMinutes: args.utcOffsetMinutes,
-        ...(args.name ? { name: args.name } : {}),
+        ...(shouldSetName ? { name: args.name } : {}),
       });
     } else {
-      // Apple only shares the name on the very first sign-in.
+      // Apple only shares the name on the very first sign-in; the client caches it
+      // and prompts when missing so we rarely hit the Player fallback.
       userId = await ctx.db.insert("users", {
         name: args.name ?? "Player",
         appleSub: args.appleSub,

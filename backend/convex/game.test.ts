@@ -118,6 +118,43 @@ describe("dev sign-in", () => {
   });
 });
 
+describe("apple sign-in names", () => {
+  const device = { timeZone: "UTC", utcOffsetMinutes: 0 };
+
+  test("stores the provided name on first sign-in", async () => {
+    const t = convexTest(schema, modules);
+    const token = await t.mutation(internal.auth.upsertAppleUser, {
+      appleSub: "apple.jamie",
+      name: "Jamie",
+      ...device,
+    });
+    expect((await t.query(api.users.me, { sessionToken: token }))?.name).toBe("Jamie");
+  });
+
+  test("upgrades the Player placeholder without overwriting a chosen name", async () => {
+    const t = convexTest(schema, modules);
+    const placeholder = await t.mutation(internal.auth.upsertAppleUser, {
+      appleSub: "apple.alex",
+      ...device,
+    });
+    expect((await t.query(api.users.me, { sessionToken: placeholder }))?.name).toBe("Player");
+
+    const upgraded = await t.mutation(internal.auth.upsertAppleUser, {
+      appleSub: "apple.alex",
+      name: "Alex",
+      ...device,
+    });
+    expect((await t.query(api.users.me, { sessionToken: upgraded }))?.name).toBe("Alex");
+
+    const again = await t.mutation(internal.auth.upsertAppleUser, {
+      appleSub: "apple.alex",
+      name: "ShouldNotOverwrite",
+      ...device,
+    });
+    expect((await t.query(api.users.me, { sessionToken: again }))?.name).toBe("Alex");
+  });
+});
+
 describe("rules", () => {
   test("every card is single use", async () => {
     const { t, alice, bob } = await setupCouple();

@@ -106,6 +106,22 @@ final class GameFormattingTests: XCTestCase {
         XCTAssertTrue(SessionStore.appleSignInErrorMessage(for: ASAuthorizationError(.invalidResponse))?.hasPrefix("Sign in with Apple failed") == true)
     }
 
+    func testAppleDisplayNameUsesGivenAndFamilyNames() {
+        var components = PersonNameComponents()
+        components.givenName = "Jamie"
+        components.familyName = "Lee"
+        XCTAssertEqual(AppleDisplayName.from(components), "Jamie Lee")
+        XCTAssertNil(AppleDisplayName.from(PersonNameComponents()))
+        XCTAssertNil(AppleDisplayName.from(nil))
+    }
+
+    func testAppleDisplayNameCacheRoundTripsByAppleUserId() {
+        let userId = "apple.test.\(UUID().uuidString)"
+        XCTAssertNil(AppleDisplayName.cached(forAppleUserId: userId))
+        AppleDisplayName.cache("  Theo  ", forAppleUserId: userId)
+        XCTAssertEqual(AppleDisplayName.cached(forAppleUserId: userId), "Theo")
+    }
+
     func testBundledDevSignInFlagIsExpanded() {
         let raw = Bundle.main.object(forInfoDictionaryKey: "ENABLE_DEV_SIGNIN") as? String
         XCTAssertTrue(["YES", "NO"].contains(raw ?? ""), "ENABLE_DEV_SIGNIN should expand to YES or NO, got \(raw ?? "nil")")
