@@ -5,7 +5,7 @@ import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { deliveryTime, isInQuietHours } from "./lib/rules";
 import schema from "./schema";
-import { apnsConfigured } from "./lib/apnsConfig";
+import { apnsConfigured, normalizeApnsPrivateKey } from "./lib/apnsConfig";
 import { SEED_CARDS } from "./seedData";
 
 const modules = import.meta.glob("./**/*.ts");
@@ -694,5 +694,19 @@ describe("APNs configuration", () => {
     expect(apnsConfigured()).toBe(false);
     vi.stubEnv("APNS_TOPIC", "com.jamesshah.nudgedeck");
     expect(apnsConfigured()).toBe(true);
+  });
+
+  test("rebuilds a PEM when env newlines were mangled", () => {
+    const body =
+      "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgAAAAAAAAAAAAAAAAAAAA" +
+      "AAAAAAAAAAAAAAAAAAAAoFcGCSqGSIb3DQEJDzFBBBBB";
+    const oneLine = `"-----BEGIN PRIVATE KEY-----${body}-----END PRIVATE KEY-----"`;
+    const escaped = `-----BEGIN PRIVATE KEY-----\\n${body}\\n-----END PRIVATE KEY-----\\n`;
+    for (const raw of [oneLine, escaped]) {
+      const pem = normalizeApnsPrivateKey(raw);
+      expect(pem.startsWith("-----BEGIN PRIVATE KEY-----\n")).toBe(true);
+      expect(pem.includes("\n-----END PRIVATE KEY-----\n")).toBe(true);
+      expect(pem.replace(/-----[^-]+-----|\s/g, "")).toBe(body);
+    }
   });
 });
