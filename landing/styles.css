@@ -583,17 +583,24 @@ a:hover {
 		justify-self: start;
 	}
 
+	/* Phone + 2×2 cards: card width sized so two rows ≈ phone height */
 	.feature-mosaic {
-		grid-template-columns: repeat(6, 1fr);
-		gap: 1rem;
+		--phone-w: 16.5rem;
+		--card-w: calc(var(--phone-w) * 0.77);
+		grid-template-columns: var(--phone-w) var(--card-w) var(--card-w);
+		gap: 0.75rem;
 		align-items: start;
+		justify-content: center;
+		width: fit-content;
+		max-width: 100%;
+		margin-inline: auto;
 	}
 
 	.feature-mosaic .phone {
-		grid-column: span 2;
-		grid-row: span 2;
+		grid-column: 1;
+		grid-row: 1 / span 2;
 		width: 100%;
-		max-width: 18rem;
+		max-width: none;
 		margin: 0;
 		height: auto;
 		object-fit: contain;
@@ -601,7 +608,7 @@ a:hover {
 	}
 
 	.feature-mosaic .card {
-		grid-column: span 2;
+		width: 100%;
 		height: auto;
 		object-fit: contain;
 	}
