@@ -46,6 +46,7 @@ final class PushRegistration {
         sessionToken = nil
         backendCanPush = false
         NotificationService.shared.reset()
+        NotificationRouter.shared.consume()
     }
 
     private func registerIfReady() async {

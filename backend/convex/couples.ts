@@ -3,6 +3,7 @@ import { internal } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalMutation, type MutationCtx, type QueryCtx } from "./_generated/server";
 import { userMutation, userQuery } from "./lib/auth";
+import { notify } from "./lib/game";
 import { dealDeck, makeInviteCode, normalizeInviteCode, TIMEFRAME_OPTIONS_DAYS } from "./lib/rules";
 import { cancelCoupleSeasonJobs, cancelJob } from "./lib/seasonJobs";
 import { playerView, recapPlayer } from "./lib/validators";
@@ -97,11 +98,13 @@ export const join = userMutation({
       coupleId: couple._id,
     });
     await ctx.db.patch("couples", couple._id, { endSeasonJobId });
-    await ctx.scheduler.runAfter(0, internal.push.sendToUser, {
-      userId: couple.playerA,
-      title: `${ctx.user.name} joined!`,
-      body: "Your season has started. Your Deck is ready — Nudge them.",
-    });
+    await notify(
+      ctx,
+      couple.playerA,
+      `${ctx.user.name} joined!`,
+      "Your season has started. Your Deck is ready — Nudge them.",
+      { screen: "deck" },
+    );
     return null;
   },
 });
@@ -154,10 +157,8 @@ export const endSeason = internalMutation({
     }
     for (const userId of [couple.playerA, couple.playerB]) {
       if (!userId) continue;
-      await ctx.scheduler.runAfter(0, internal.push.sendToUser, {
-        userId,
-        title: "That's a wrap!",
-        body: "Open Nudge Deck for your season recap.",
+      await notify(ctx, userId, "That's a wrap!", "Open Nudge Deck for your season recap.", {
+        screen: "recap",
       });
     }
     return null;
@@ -199,13 +200,15 @@ export const unpair = userMutation({
 
     const partnerId = couple.playerA === ctx.user._id ? couple.playerB : couple.playerA;
     if (partnerId) {
-      await ctx.scheduler.runAfter(0, internal.push.sendToUser, {
-        userId: partnerId,
-        title: wasActive ? "Season ended" : "Unpaired",
-        body: wasActive
+      await notify(
+        ctx,
+        partnerId,
+        wasActive ? "Season ended" : "Unpaired",
+        wasActive
           ? `${ctx.user.name} ended the season and unpaired.`
           : `${ctx.user.name} unpaired. You can start a new season anytime.`,
-      });
+        { screen: "deck" },
+      );
     }
     return null;
   },
@@ -261,13 +264,15 @@ export const startNewSeason = userMutation({
     await ctx.db.patch("couples", newCoupleId, { endSeasonJobId });
 
     const partnerId = old.playerA === ctx.user._id ? old.playerB : old.playerA;
-    await ctx.scheduler.runAfter(0, internal.push.sendToUser, {
-      userId: partnerId,
-      title: endedActive ? "Season ended" : "New season!",
-      body: endedActive
+    await notify(
+      ctx,
+      partnerId,
+      endedActive ? "Season ended" : "New season!",
+      endedActive
         ? `${ctx.user.name} ended the season and started a new one. Your Deck is ready — Nudge them.`
         : `${ctx.user.name} started a new season. Your Deck is ready — Nudge them.`,
-    });
+      { screen: "deck" },
+    );
     return null;
   },
 });

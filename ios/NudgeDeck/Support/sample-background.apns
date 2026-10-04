@@ -8,5 +8,6 @@
     "sound": "default",
     "badge": 1
   },
+  "screen": "inbox",
   "playId": "simulator-preview"
 }

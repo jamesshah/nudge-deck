@@ -22,6 +22,7 @@ final class NotificationService {
     }
 
     func inboxDidUpdate(_ inbox: Inbox) {
+        syncBadge(count: inbox.needsAttentionCount)
         let events = Self.events(in: inbox)
         let keys = Set(events.map(\.key))
         defer { seenKeys = (seenKeys ?? []).union(keys) }
@@ -31,7 +32,14 @@ final class NotificationService {
         // the backend confirms all APNs provider credentials are configured.
         guard !PushRegistration.shared.isRemotePushReady else { return }
         for event in events where !seen.contains(event.key) {
-            post(title: event.title, body: event.body, id: event.key)
+            post(
+                title: event.title,
+                body: event.body,
+                id: event.key,
+                screen: event.screen,
+                playId: event.playId,
+                badge: inbox.needsAttentionCount
+            )
         }
     }
 
@@ -48,7 +56,9 @@ final class NotificationService {
             post(
                 title: "Unpaired",
                 body: "You can start a new season anytime.",
-                id: "unpaired:\(prev.id)"
+                id: "unpaired:\(prev.id)",
+                screen: .deck,
+                badge: 0
             )
             return
         }
@@ -57,7 +67,8 @@ final class NotificationService {
             post(
                 title: "New season!",
                 body: "Your Deck is ready — Nudge them.",
-                id: "new-season:\(next.id)"
+                id: "new-season:\(next.id)",
+                screen: .deck
             )
             return
         }
@@ -67,7 +78,8 @@ final class NotificationService {
             post(
                 title: "That's a wrap!",
                 body: "Open Nudge Deck for your season recap.",
-                id: "season-ended:\(next.id)"
+                id: "season-ended:\(next.id)",
+                screen: .recap
             )
         }
     }
@@ -76,12 +88,21 @@ final class NotificationService {
         seenKeys = nil
         previousCouple = nil
         hasCoupleBaseline = false
+        syncBadge(count: 0)
+    }
+
+    func syncBadge(count: Int) {
+        Task {
+            try? await UNUserNotificationCenter.current().setBadgeCount(count)
+        }
     }
 
     struct Event: Equatable {
         let key: String
         let title: String
         let body: String
+        let screen: NotificationDestination
+        let playId: String
     }
 
     nonisolated static func events(in inbox: Inbox) -> [Event] {
@@ -97,20 +118,39 @@ final class NotificationService {
                         ? (play.stackedOnPlayId == nil
                             ? "Your person sent you something."
                             : "Someone stacked another Nudge on you.")
-                        : "Someone wants your attention."
+                        : "Someone wants your attention.",
+                    screen: .inbox,
+                    playId: play.id
                 )
             }
         let proofs = inbox.toReview.map { play in
-            Event(key: "\(play.id):proof", title: "\(play.toName) sent proof", body: "A Nudge is waiting for your review.")
+            Event(
+                key: "\(play.id):proof",
+                title: "\(play.toName) sent proof",
+                body: "A Nudge is waiting for your review.",
+                screen: .inbox,
+                playId: play.id
+            )
         }
         return incoming + proofs
     }
 
-    private func post(title: String, body: String, id: String) {
+    private func post(
+        title: String,
+        body: String,
+        id: String,
+        screen: NotificationDestination,
+        playId: String? = nil,
+        badge: Int? = nil
+    ) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = .default
+        var userInfo: [String: String] = ["screen": screen.rawValue]
+        if let playId { userInfo["playId"] = playId }
+        content.userInfo = userInfo
+        if let badge { content.badge = NSNumber(value: badge) }
         let request = UNNotificationRequest(identifier: id, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
     }

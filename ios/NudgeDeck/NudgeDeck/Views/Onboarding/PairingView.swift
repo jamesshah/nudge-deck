@@ -113,7 +113,7 @@ struct WaitingForPartnerView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         HStack {
-                            ShareLink(item: "Nudge with me on Nudge Deck. Join with code \(couple.inviteCode)") {
+                            ShareLink(item: Self.inviteShareText(code: couple.inviteCode)) {
                                 Label("Share", systemImage: "square.and.arrow.up")
                             }
                             .buttonStyle(.borderedProminent)
@@ -165,6 +165,14 @@ struct WaitingForPartnerView: View {
             }
             .sheet(isPresented: $showingCustomCard) { CustomCardSheet() }
         }
+    }
+
+    static func inviteShareText(code: String) -> String {
+        """
+        Nudge with me on Nudge Deck. Join with code \(code).
+
+        Get the app: \(AppConfig.appStoreURL.absoluteString)
+        """
     }
 }
 

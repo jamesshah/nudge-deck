@@ -171,7 +171,7 @@ private struct IncomingRow: View {
                     .foregroundStyle(Theme.warning)
             }
             if play.state == .proofSubmitted {
-                Label("Proof sent. Waiting for \(partnerName) — nice work, lover.", systemImage: "paperplane.fill")
+                Label("Proof sent. Waiting for \(partnerName) — nice work.", systemImage: "paperplane.fill")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {

@@ -77,6 +77,12 @@ final class GameFormattingTests: XCTestCase {
         XCTAssertEqual(GameFormatting.normalizedInviteCode(" ab-c 23x "), "ABC23X")
     }
 
+    func testInviteShareTextIncludesCodeAndAppStoreLink() {
+        let text = WaitingForPartnerView.inviteShareText(code: "K7M4QX")
+        XCTAssertTrue(text.contains("K7M4QX"))
+        XCTAssertTrue(text.contains(AppConfig.appStoreURL.absoluteString))
+    }
+
     func testConvexURLResolution() {
         XCTAssertEqual(AppConfig.resolveConvexURL("https://loyal-lapwing-231.convex.cloud"), "https://loyal-lapwing-231.convex.cloud")
         XCTAssertEqual(AppConfig.resolveConvexURL("http://127.0.0.1:3210"), "http://127.0.0.1:3210")
