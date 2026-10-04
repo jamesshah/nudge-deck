@@ -33,11 +33,17 @@ While empty, the App Store badge links to `#download` and shows “Coming soon�
 | Setting | Value |
 | --- | --- |
 | Project | `nudgedeck-landing` |
+| GitHub repo | `jamesshah/nudge-deck` |
 | Root directory | `landing` |
 | Build command | *(empty)* |
+| Production branch | `main` → production (`nudgedeck.app`) |
+| Preview | all other branches / PRs → preview URLs |
+| Path filter | `landing/**` (only landing changes trigger builds) |
 | Custom domains | `nudgedeck.app`, `www.nudgedeck.app` |
 
-Direct deploy:
+Pushes to `main` that touch `landing/**` auto-deploy production. Pull requests and other branches get preview deployments with PR comments.
+
+Manual / Direct Upload (optional):
 
 ```bash
 npx wrangler pages deploy landing --project-name=nudgedeck-landing
