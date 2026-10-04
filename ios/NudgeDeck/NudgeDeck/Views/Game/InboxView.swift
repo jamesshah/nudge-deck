@@ -275,7 +275,7 @@ struct ProofView: View {
         VStack(alignment: .leading, spacing: 8) {
             switch play.proofType {
             case .some(.photo):
-                if let urlString = play.proofUrl, let url = URL(string: urlString) {
+                if let url = play.reachableProofURL {
                     AsyncImage(url: url) { phase in
                         switch phase {
                         case .success(let image):
@@ -291,7 +291,7 @@ struct ProofView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
             case .some(.audio):
-                if let urlString = play.proofUrl, let url = URL(string: urlString) {
+                if let url = play.reachableProofURL {
                     Button {
                         audio.toggle(url: url)
                     } label: {

@@ -141,6 +141,12 @@ struct Play: Decodable, Equatable, Identifiable {
 
     var playedDate: Date { Date(timeIntervalSince1970: playedAt / 1000) }
     var deliverDate: Date { Date(timeIntervalSince1970: deliverAt / 1000) }
+
+    /// Storage URLs from a local backend use loopback; align to the app's Convex host.
+    var reachableProofURL: URL? {
+        guard let proofUrl else { return nil }
+        return URL(string: AppConfig.alignStorageURL(proofUrl))
+    }
 }
 
 struct Inbox: Decodable, Equatable {

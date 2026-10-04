@@ -35,6 +35,19 @@ enum AppConfig {
         else { return fallbackConvexURL }
         return value
     }
+
+    /// Local Convex advertises storage at `127.0.0.1`, but a device may reach the same
+    /// backend via a LAN hostname (`CONVEX_URL`). Keep scheme/host/port in sync.
+    static func alignStorageURL(_ urlString: String, to deploymentURL: String = convexURL) -> String {
+        guard let deployment = URL(string: deploymentURL),
+              var components = URLComponents(string: urlString),
+              components.host != nil
+        else { return urlString }
+        components.scheme = deployment.scheme
+        components.host = deployment.host
+        components.port = deployment.port
+        return components.url?.absoluteString ?? urlString
+    }
 }
 
 enum Backend {

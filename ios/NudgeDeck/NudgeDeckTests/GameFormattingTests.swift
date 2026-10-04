@@ -85,6 +85,27 @@ final class GameFormattingTests: XCTestCase {
         XCTAssertEqual(AppConfig.resolveConvexURL(nil), AppConfig.fallbackConvexURL)
     }
 
+    func testProofFileSizeLimit() {
+        XCTAssertEqual(GameFormatting.maxProofBytes, 3 * 1024 * 1024)
+        XCTAssertTrue(GameFormatting.isProofFileWithinLimit(Data(count: GameFormatting.maxProofBytes)))
+        XCTAssertFalse(GameFormatting.isProofFileWithinLimit(Data(count: GameFormatting.maxProofBytes + 1)))
+        XCTAssertTrue(GameFormatting.proofFileTooLargeMessage(for: .photo).contains("3 MB"))
+        XCTAssertTrue(GameFormatting.proofFileTooLargeMessage(for: .audio).contains("3 MB"))
+    }
+
+    func testAlignStorageURLRewritesLocalLoopbackToLANHost() {
+        let upload = "http://127.0.0.1:3210/api/storage/upload?token=abc"
+        XCTAssertEqual(
+            AppConfig.alignStorageURL(upload, to: "http://mini.local:3210"),
+            "http://mini.local:3210/api/storage/upload?token=abc"
+        )
+        let cloud = "https://loyal-lapwing-231.convex.cloud/api/storage/xyz"
+        XCTAssertEqual(
+            AppConfig.alignStorageURL(cloud, to: "https://loyal-lapwing-231.convex.cloud"),
+            cloud
+        )
+    }
+
     func testBundledConvexURLIsConfigured() {
         let raw = Bundle.main.object(forInfoDictionaryKey: "CONVEX_URL") as? String
         XCTAssertEqual(raw.map { AppConfig.resolveConvexURL($0) }, raw, "CONVEX_URL build setting should expand to a full URL")
