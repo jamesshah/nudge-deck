@@ -20,10 +20,11 @@ export async function attentionBadgeCount(
   userId: Id<"users">,
 ): Promise<number> {
   const user = await ctx.db.get("users", userId);
-  if (!user?.coupleId) return 0;
+  const coupleId = user?.coupleId;
+  if (!coupleId) return 0;
   const plays = await ctx.db
     .query("plays")
-    .withIndex("by_couple", (q) => q.eq("coupleId", user.coupleId))
+    .withIndex("by_couple", (q) => q.eq("coupleId", coupleId))
     .take(300);
   let count = 0;
   for (const play of plays) {
