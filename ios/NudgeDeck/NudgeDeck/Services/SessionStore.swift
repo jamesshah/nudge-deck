@@ -11,9 +11,16 @@ final class SessionStore: ObservableObject {
         case signedIn(token: String, me: Me)
     }
 
+    struct PendingAppleCredentials: Equatable {
+        let identityToken: String
+        let appleUserId: String
+    }
+
     @Published private(set) var state: State = .loading
     @Published var errorMessage: String?
     @Published private(set) var isWorking = false
+    /// Set when Apple authorizes but doesn't return a usable name (common after the first auth).
+    @Published private(set) var pendingAppleCredentials: PendingAppleCredentials?
 
     /// Nil only for previews, which must never open a connection.
     private let client: ConvexClient?
@@ -71,17 +78,46 @@ final class SessionStore: ObservableObject {
                 errorMessage = "Apple didn't return an identity token. Please try again."
                 return
             }
-            var args = Backend.deviceTimeArgs
-            args["identityToken"] = identityToken
-            if let components = credential.fullName {
-                let name = PersonNameComponentsFormatter.localizedString(from: components, style: .default)
-                if !name.isEmpty { args["name"] = name }
+            let appleUserId = credential.user
+            let name = AppleDisplayName.from(credential.fullName)
+                ?? AppleDisplayName.cached(forAppleUserId: appleUserId)
+            if let name {
+                AppleDisplayName.cache(name, forAppleUserId: appleUserId)
+                await completeAppleSignIn(identityToken: identityToken, name: name)
+            } else {
+                // Apple only shares the name on the first authorization for this app.
+                pendingAppleCredentials = PendingAppleCredentials(
+                    identityToken: identityToken,
+                    appleUserId: appleUserId
+                )
             }
-            guard let client else { return }
-            await signIn {
-                let token: String = try await client.action("auth:signInWithApple", with: args)
-                return token
-            }
+        }
+    }
+
+    func submitAppleDisplayName(_ name: String) async {
+        guard let pending = pendingAppleCredentials else { return }
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            errorMessage = "Enter a name to continue."
+            return
+        }
+        AppleDisplayName.cache(trimmed, forAppleUserId: pending.appleUserId)
+        pendingAppleCredentials = nil
+        await completeAppleSignIn(identityToken: pending.identityToken, name: trimmed)
+    }
+
+    func cancelPendingAppleSignIn() {
+        pendingAppleCredentials = nil
+    }
+
+    private func completeAppleSignIn(identityToken: String, name: String) async {
+        var args = Backend.deviceTimeArgs
+        args["identityToken"] = identityToken
+        args["name"] = name
+        guard let client else { return }
+        await signIn {
+            let token: String = try await client.action("auth:signInWithApple", with: args)
+            return token
         }
     }
 

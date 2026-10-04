@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SignInView: View {
     @EnvironmentObject private var session: SessionStore
+    @State private var appleName = ""
     @State private var devName = ""
     @FocusState private var nameFocused: Bool
     @Environment(\.colorScheme) private var colorScheme
@@ -29,27 +30,76 @@ struct SignInView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(Theme.canvas.ignoresSafeArea())
+        .onChange(of: session.pendingAppleCredentials) { _, pending in
+            if pending == nil { appleName = "" }
+        }
     }
 
     private var content: some View {
         VStack(spacing: 28) {
             hero
 
-            SignInWithAppleButton(.signIn) { request in
-                request.requestedScopes = [.fullName]
-            } onCompletion: { result in
-                Task { await session.handleAppleSignIn(result) }
+            if session.pendingAppleCredentials != nil {
+                appleNamePrompt
+            } else {
+                SignInWithAppleButton(.signIn) { request in
+                    request.requestedScopes = [.fullName]
+                } onCompletion: { result in
+                    Task { await session.handleAppleSignIn(result) }
+                }
+                .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+                // The underlying Apple button keeps its first style, so rebuild it when the scheme changes.
+                .id(colorScheme)
+                .frame(height: 52)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
-            .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
-            // The underlying Apple button keeps its first style, so rebuild it when the scheme changes.
-            .id(colorScheme)
-            .frame(height: 52)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
             #if DEBUG
-            if showsDevSignIn { devSignIn }
+            if showsDevSignIn && session.pendingAppleCredentials == nil { devSignIn }
             #endif
         }
+    }
+
+    private var appleNamePrompt: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("What should we call you?")
+                .font(.headline)
+            Text("Apple only shares your name the first time you sign in. Enter it once and we’ll remember it.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            HStack {
+                TextField("Your name", text: $appleName)
+                    .textContentType(.givenName)
+                    .submitLabel(.go)
+                    .focused($nameFocused)
+                    .onSubmit(submitAppleName)
+                    .padding(12)
+                    .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                Button(action: submitAppleName) {
+                    if session.isWorking {
+                        ProgressView()
+                    } else {
+                        Text("Continue")
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(appleName.trimmingCharacters(in: .whitespaces).isEmpty || session.isWorking)
+            }
+            Button("Back") {
+                session.cancelPendingAppleSignIn()
+            }
+            .font(.subheadline)
+            .disabled(session.isWorking)
+        }
+        .padding(16)
+        .calmSurface(radius: 18)
+        .onAppear { nameFocused = true }
+    }
+
+    private func submitAppleName() {
+        nameFocused = false
+        Task { await session.submitAppleDisplayName(appleName) }
     }
 
     private var hero: some View {
