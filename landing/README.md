@@ -38,7 +38,7 @@ While empty, the App Store badge links to `#download` and shows “Coming soon�
 | Build command | *(empty)* |
 | Production branch | `main` → production (`nudgedeck.app`) |
 | Preview | all other branches / PRs → preview URLs |
-| Path filter | `landing/*` (only landing changes trigger builds) |
+| Path filter | `landing/*`, `landing/assets/*`, `landing/assets/screenshots/*` |
 | Custom domains | `nudgedeck.app`, `www.nudgedeck.app` |
 
 Pushes to `main` that touch `landing/**` auto-deploy production. Pull requests and other branches get preview deployments with PR comments.
