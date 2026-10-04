@@ -3,6 +3,7 @@
 import { createPrivateKey, sign } from "node:crypto";
 import http2 from "node:http2";
 import { v } from "convex/values";
+import { normalizeApnsPrivateKey } from "./lib/apnsConfig";
 import { internalAction } from "./_generated/server";
 
 const HOSTS = {
@@ -17,8 +18,7 @@ function base64url(input: Buffer | string): string {
 function providerToken(): string {
   const keyId = process.env.APNS_KEY_ID!;
   const teamId = process.env.APNS_TEAM_ID!;
-  // Env vars often store the .p8 with literal "\n" sequences.
-  const pem = process.env.APNS_PRIVATE_KEY!.replace(/\\n/g, "\n");
+  const pem = normalizeApnsPrivateKey(process.env.APNS_PRIVATE_KEY!);
   const header = base64url(JSON.stringify({ alg: "ES256", kid: keyId }));
   const claims = base64url(JSON.stringify({ iss: teamId, iat: Math.floor(Date.now() / 1000) }));
   const signingInput = `${header}.${claims}`;

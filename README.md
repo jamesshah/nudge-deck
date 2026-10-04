@@ -170,11 +170,16 @@ Both need a paid Apple Developer account and a signed build.
    cd backend
    npx convex env set APNS_TEAM_ID ABCDE12345
    npx convex env set APNS_KEY_ID 1A2BC3D4E5
-   npx convex env set APNS_PRIVATE_KEY "$(cat /absolute/path/to/AuthKey_1A2BC3D4E5.p8)"
+   # Use --from-file. Do not pass the PEM as a CLI argument: lines starting
+   # with ----- are parsed as flags ("unknown option" / looks like a denial).
+   # Dashboard pastes also often collapse newlines and break OpenSSL.
+   npx convex env set APNS_PRIVATE_KEY --from-file /absolute/path/to/AuthKey_1A2BC3D4E5.p8
    npx convex env set APNS_TOPIC com.jamesshah.nudgedeck
    ```
    James must provide: the paid Apple Developer **Team ID**, the downloaded APNs
    **`.p8` private key**, its **Key ID**, and the app's exact **bundle ID/topic**.
+   The `.p8` must include the `-----BEGIN PRIVATE KEY-----` /
+   `-----END PRIVATE KEY-----` lines.
 5. Run `xcodegen generate` and build to a real device. Grant notification permission
    when prompted. The app registers with APNs, stores the device token in Convex, and
    the backend sends through the sandbox or production APNs host as appropriate.
