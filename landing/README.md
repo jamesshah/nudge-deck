@@ -2,6 +2,8 @@
 
 Static marketing site for [nudgedeck.app](https://nudgedeck.app), deployed on Cloudflare Pages.
 
+Layout: hero (2-column on desktop), how it works, one features mosaic (simulator screenshots), FAQ, download.
+
 ## Local preview
 
 ```bash
