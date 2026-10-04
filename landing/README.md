@@ -1,0 +1,42 @@
+# Nudge Deck marketing site
+
+Static marketing site for [nudgedeck.app](https://nudgedeck.app), deployed on Cloudflare Pages.
+
+## Local preview
+
+```bash
+npx --yes serve landing
+```
+
+Or open `landing/index.html` directly in a browser.
+
+## App Store download link
+
+When the listing is live, set the meta tag in `index.html`:
+
+```html
+<meta name="nudgedeck:app-store-url" content="https://apps.apple.com/app/idXXXXXXXX" />
+```
+
+While empty, the App Store badge links to `#download` and shows “Coming soon”.
+
+## App Store Connect URLs
+
+- Privacy Policy: `https://nudgedeck.app/privacy.html`
+- Terms of Service: `https://nudgedeck.app/terms.html`
+- Support: `hello@nudgedeck.app`
+
+## Cloudflare Pages
+
+| Setting | Value |
+| --- | --- |
+| Project | `nudgedeck-landing` |
+| Root directory | `landing` |
+| Build command | *(empty)* |
+| Custom domains | `nudgedeck.app`, `www.nudgedeck.app` |
+
+Direct deploy:
+
+```bash
+npx wrangler pages deploy landing --project-name=nudgedeck-landing
+```
