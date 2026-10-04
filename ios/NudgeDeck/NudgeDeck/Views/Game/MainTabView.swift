@@ -10,6 +10,7 @@ private enum AppTab: Hashable {
 
 struct MainTabView: View {
     @EnvironmentObject private var store: GameStore
+    @ObservedObject private var notificationRouter = NotificationRouter.shared
     @State private var selectedTab: AppTab = .deck
 
     private var seasonEnded: Bool {
@@ -37,8 +38,17 @@ struct MainTabView: View {
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
                 .tag(AppTab.settings)
         }
-        .onAppear(perform: syncSelectedTab)
-        .onChange(of: store.couple?.status) { _, _ in syncSelectedTab() }
+        .onAppear {
+            syncSelectedTab()
+            applyPendingNotificationRoute()
+        }
+        .onChange(of: store.couple?.status) { _, _ in
+            syncSelectedTab()
+            applyPendingNotificationRoute()
+        }
+        .onChange(of: notificationRouter.destination) { _, _ in
+            applyPendingNotificationRoute()
+        }
     }
 
     private func syncSelectedTab() {
@@ -46,6 +56,25 @@ struct MainTabView: View {
             if selectedTab == .deck || selectedTab == .inbox {
                 selectedTab = .recap
             }
+        }
+    }
+
+    private func applyPendingNotificationRoute() {
+        guard let destination = notificationRouter.destination else { return }
+        selectedTab = tab(for: destination)
+        notificationRouter.consume()
+    }
+
+    private func tab(for destination: NotificationDestination) -> AppTab {
+        switch destination {
+        case .inbox:
+            return seasonEnded ? .recap : .inbox
+        case .deck:
+            return seasonEnded ? .recap : .deck
+        case .timeline:
+            return .timeline
+        case .recap:
+            return .recap
         }
     }
 }

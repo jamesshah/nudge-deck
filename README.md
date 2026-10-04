@@ -195,6 +195,7 @@ xcrun simctl push booted com.jamesshah.nudgedeck Support/sample-background.apns
 ```
 
 The checked-in sample includes an alert, sound, badge, bundle target, and example
-`playId`. This proves the iOS entitlement, authorization, and background presentation
-path. It does not prove the Convex-to-APNs provider connection; that requires the four
+`screen` / `playId` deep-link fields. Tapping it should open the Inbox tab. This proves
+the iOS entitlement, authorization, background presentation, and tap-routing path. It
+does not prove the Convex-to-APNs provider connection; that requires the four
 credentials above.

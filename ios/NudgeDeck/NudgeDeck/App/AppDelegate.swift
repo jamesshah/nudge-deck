@@ -8,6 +8,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self
         Theme.configureTabBarAppearance()
+        if let userInfo = launchOptions?[.remoteNotification] as? [AnyHashable: Any] {
+            Task { @MainActor in NotificationRouter.shared.handle(userInfo: userInfo) }
+        }
         return true
     }
 
@@ -24,6 +27,16 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.banner, .sound, .list])
+        completionHandler([.banner, .sound, .list, .badge])
+    }
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        let userInfo = response.notification.request.content.userInfo
+        Task { @MainActor in NotificationRouter.shared.handle(userInfo: userInfo) }
+        completionHandler()
     }
 }

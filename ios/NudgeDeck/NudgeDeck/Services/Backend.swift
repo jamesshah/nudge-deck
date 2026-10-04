@@ -4,6 +4,9 @@ import Foundation
 enum AppConfig {
     static let fallbackConvexURL = "https://loyal-lapwing-231.convex.cloud"
 
+    /// Public App Store product page for Nudge Deck (App Store Connect Apple ID).
+    static let appStoreURL = URL(string: "https://apps.apple.com/app/nudge-deck/id6817191350")!
+
     static var convexURL: String {
         resolveConvexURL(Bundle.main.object(forInfoDictionaryKey: "CONVEX_URL") as? String)
     }

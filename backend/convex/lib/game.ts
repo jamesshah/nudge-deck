@@ -11,13 +11,45 @@ type ProofInput = {
   proofStorageId?: Id<"_storage"> | null;
 };
 
+/** Tab the iOS client should open when the user taps the push. */
+export type NotifyScreen = "inbox" | "deck" | "recap" | "timeline";
+
+/** Pending inbox items that deserve an app-icon badge. */
+export async function attentionBadgeCount(
+  ctx: QueryCtx | MutationCtx,
+  userId: Id<"users">,
+): Promise<number> {
+  const user = await ctx.db.get("users", userId);
+  const coupleId = user?.coupleId;
+  if (!coupleId) return 0;
+  const plays = await ctx.db
+    .query("plays")
+    .withIndex("by_couple", (q) => q.eq("coupleId", coupleId))
+    .take(300);
+  let count = 0;
+  for (const play of plays) {
+    if (play.toId === userId && play.delivered && play.state === "pending") count += 1;
+    else if (play.fromId === userId && play.state === "proofSubmitted") count += 1;
+  }
+  return count;
+}
+
 export async function notify(
   ctx: MutationCtx,
   userId: Id<"users">,
   title: string,
   body: string,
+  opts: { screen: NotifyScreen; playId?: Id<"plays"> } = { screen: "inbox" },
 ): Promise<void> {
-  await ctx.scheduler.runAfter(0, internal.push.sendToUser, { userId, title, body });
+  const badge = await attentionBadgeCount(ctx, userId);
+  await ctx.scheduler.runAfter(0, internal.push.sendToUser, {
+    userId,
+    title,
+    body,
+    badge,
+    screen: opts.screen,
+    playId: opts.playId,
+  });
 }
 
 function assertSeasonOpen(couple: Doc<"couples">, now: number): void {
@@ -127,7 +159,7 @@ export async function playCard(
   });
 
   if (delivered) {
-    await notifyPlayDelivered(ctx, user.name, partnerId, card.title, stackedOn !== null);
+    await notifyPlayDelivered(ctx, user.name, partnerId, card.title, stackedOn !== null, playId);
   } else {
     const deliverJobId = await ctx.scheduler.runAt(deliverAt, internal.plays.deliver, { playId });
     await ctx.db.patch("plays", playId, { deliverJobId });
@@ -141,6 +173,7 @@ async function notifyPlayDelivered(
   toId: Id<"users">,
   _cardTitle: string,
   stacked: boolean,
+  playId: Id<"plays">,
 ): Promise<void> {
   await notify(
     ctx,
@@ -149,6 +182,7 @@ async function notifyPlayDelivered(
     stacked
       ? "Someone stacked another Nudge on you."
       : "Your person sent you something.",
+    { screen: "inbox", playId },
   );
 }
 
@@ -180,6 +214,7 @@ export async function deliverPlay(ctx: MutationCtx, playId: Id<"plays">): Promis
     play.toId,
     card?.title ?? "A new card",
     play.stackedOnPlayId !== undefined,
+    playId,
   );
 }
 
@@ -223,6 +258,7 @@ export async function counterPlay(
     partnerId,
     `${user.name} blocked your Nudge`,
     "We'll pretend that didn't happen.",
+    { screen: "timeline", playId: target._id },
   );
   return counterId;
 }
@@ -267,6 +303,7 @@ export async function refusePlay(
     stolen
       ? "You stole a Nudge from their Deck. Nudge them back?"
       : "Their Deck was empty, so there was nothing to steal.",
+    { screen: stolen ? "deck" : "timeline", playId: play._id },
   );
 }
 
@@ -317,6 +354,7 @@ export async function completeWithProof(
     play.fromId,
     `${user.name} sent proof`,
     "A Nudge is waiting for your review.",
+    { screen: "inbox", playId: play._id },
   );
 }
 
@@ -341,7 +379,10 @@ export async function acceptProof(
 ): Promise<void> {
   const play = await requireProofToReview(ctx, user, args.playId);
   await ctx.db.patch("plays", play._id, { state: "completed" });
-  await notify(ctx, play.toId, "Nudge complete 🫡", "Nice work, lover.");
+  await notify(ctx, play.toId, "Nudge complete 🫡", "Nice work.", {
+    screen: "timeline",
+    playId: play._id,
+  });
 }
 
 export async function rejectProof(
@@ -359,5 +400,8 @@ export async function rejectProof(
     proofStorageId: undefined,
     proofRejectedNote: note.slice(0, 280),
   });
-  await notify(ctx, play.toId, `${user.name} wants another try`, "Someone wants your attention.");
+  await notify(ctx, play.toId, `${user.name} wants another try`, "Someone wants your attention.", {
+    screen: "inbox",
+    playId: play._id,
+  });
 }

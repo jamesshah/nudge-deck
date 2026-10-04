@@ -71,12 +71,23 @@ export const send = internalAction({
     ),
     title: v.string(),
     body: v.string(),
+    badge: v.number(),
+    screen: v.optional(
+      v.union(v.literal("inbox"), v.literal("deck"), v.literal("recap"), v.literal("timeline")),
+    ),
+    playId: v.optional(v.id("plays")),
   },
   returns: v.array(v.string()),
   handler: async (_ctx, args) => {
     const jwt = providerToken();
     const payload = JSON.stringify({
-      aps: { alert: { title: args.title, body: args.body }, sound: "default" },
+      aps: {
+        alert: { title: args.title, body: args.body },
+        sound: "default",
+        badge: args.badge,
+      },
+      ...(args.screen ? { screen: args.screen } : {}),
+      ...(args.playId ? { playId: args.playId } : {}),
     });
     const invalid: string[] = [];
 
