@@ -328,6 +328,18 @@ describe("rules", () => {
       }),
     ).rejects.toThrow(/Attach a photo/);
 
+    const oversized = await t.run(async (ctx) =>
+      ctx.storage.store(new Blob([new Uint8Array(3 * 1024 * 1024 + 1)])),
+    );
+    await expect(
+      t.mutation(api.plays.completeWithProof, {
+        sessionToken: bob,
+        playId: p!._id,
+        proofType: "photo",
+        proofStorageId: oversized,
+      }),
+    ).rejects.toThrow(/under 3 MB/);
+
     const storageId = await t.run(async (ctx) => ctx.storage.store(new Blob(["jpeg-bytes"])));
     await t.mutation(api.plays.completeWithProof, {
       sessionToken: bob,

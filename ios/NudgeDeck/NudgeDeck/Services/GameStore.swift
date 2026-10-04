@@ -159,6 +159,10 @@ final class GameStore: ObservableObject {
 
     @discardableResult
     func completeWithFile(_ play: Play, type: ProofType, data: Data, contentType: String, caption: String?) async -> Bool {
+        guard GameFormatting.isProofFileWithinLimit(data) else {
+            errorMessage = GameFormatting.proofFileTooLargeMessage(for: type)
+            return false
+        }
         isWorking = true
         defer { isWorking = false }
         do {
@@ -213,7 +217,10 @@ final class GameStore: ObservableObject {
         guard let client else { throw UploadError.failed }
         let uploadURLString: String = try await client.mutation(
             "plays:generateUploadUrl", with: ["sessionToken": token])
-        guard let url = URL(string: uploadURLString) else { throw UploadError.badURL }
+        // Local Convex returns 127.0.0.1; rewrite to the host the app actually uses.
+        guard let url = URL(string: AppConfig.alignStorageURL(uploadURLString)) else {
+            throw UploadError.badURL
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue(contentType, forHTTPHeaderField: "Content-Type")

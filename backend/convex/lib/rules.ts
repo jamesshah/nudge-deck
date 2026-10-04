@@ -2,6 +2,7 @@ export const MINUTES_PER_DAY = 24 * 60;
 const MS_PER_MINUTE = 60_000;
 
 export const MAX_CUSTOM_CARDS_PER_PLAYER = 5;
+export const MAX_PROOF_BYTES = 3 * 1024 * 1024;
 export const TIMEFRAME_OPTIONS_DAYS = [7, 30, 90, 180] as const;
 
 export type QuietHours = {

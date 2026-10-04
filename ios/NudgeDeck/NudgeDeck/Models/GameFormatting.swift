@@ -20,6 +20,21 @@ struct QuietHours: Equatable {
 }
 
 enum GameFormatting {
+    /// Matches backend `MAX_PROOF_BYTES` in `lib/rules.ts`.
+    static let maxProofBytes = 3 * 1024 * 1024
+
+    static func proofFileTooLargeMessage(for type: ProofType) -> String {
+        switch type {
+        case .photo: return "Photos must be under 3 MB. Try a smaller one."
+        case .audio: return "Voice notes must be under 3 MB. Try a shorter recording."
+        case .text: return "Keep photo and voice note proofs under 3 MB."
+        }
+    }
+
+    static func isProofFileWithinLimit(_ data: Data) -> Bool {
+        data.count <= maxProofBytes
+    }
+
     static func minuteOfDay(date: Date, utcOffsetMinutes: Double) -> Int {
         let totalMinutes = Int(floor(date.timeIntervalSince1970 / 60)) + Int(utcOffsetMinutes)
         let day = QuietHours.minutesPerDay

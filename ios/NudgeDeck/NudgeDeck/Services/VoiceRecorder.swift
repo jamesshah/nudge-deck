@@ -56,9 +56,20 @@ final class VoiceRecorder: NSObject, ObservableObject {
         timer?.invalidate()
         timer = nil
         isRecording = false
-        recordingURL = recorder.url
+        let url = recorder.url
         self.recorder = nil
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+
+        if let attrs = try? FileManager.default.attributesOfItem(atPath: url.path),
+           let size = attrs[.size] as? NSNumber,
+           size.intValue > GameFormatting.maxProofBytes {
+            try? FileManager.default.removeItem(at: url)
+            recordingURL = nil
+            elapsed = 0
+            errorMessage = GameFormatting.proofFileTooLargeMessage(for: .audio)
+            return
+        }
+        recordingURL = url
     }
 
     func discard() {

@@ -3,7 +3,7 @@ import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { requireActiveCouple, requireCouple } from "./auth";
-import { deliveryTime } from "./rules";
+import { deliveryTime, MAX_PROOF_BYTES } from "./rules";
 
 type ProofInput = {
   proofType: "text" | "photo" | "audio";
@@ -270,6 +270,20 @@ export async function refusePlay(
   );
 }
 
+async function assertProofFileSize(
+  ctx: MutationCtx,
+  storageId: Id<"_storage">,
+): Promise<void> {
+  const meta = await ctx.db.system.get("_storage", storageId);
+  if (!meta) {
+    throw new ConvexError("That proof file is missing. Try uploading again.");
+  }
+  if (meta.size > MAX_PROOF_BYTES) {
+    await ctx.storage.delete(storageId);
+    throw new ConvexError("Keep photo and voice note proofs under 3 MB.");
+  }
+}
+
 export async function completeWithProof(
   ctx: MutationCtx,
   user: Doc<"users">,
@@ -286,6 +300,9 @@ export async function completeWithProof(
     throw new ConvexError(`Attach a ${args.proofType === "photo" ? "photo" : "voice note"} as proof.`);
   }
   if (text && text.length > 1000) throw new ConvexError("Keep your note under 1000 characters.");
+  if (args.proofStorageId) {
+    await assertProofFileSize(ctx, args.proofStorageId);
+  }
 
   await ctx.db.patch("plays", play._id, {
     state: "proofSubmitted",

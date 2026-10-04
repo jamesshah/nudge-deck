@@ -120,7 +120,7 @@ Every screen and its main subviews have `#Preview` blocks that run offline. `Gam
 CONVEX_URL = http:/$()/127.0.0.1:3210
 ```
 
-The `$()` keeps xcconfig from treating `//` as a comment. The Simulator can reach a local `npx convex dev` backend at `127.0.0.1`.
+The `$()` keeps xcconfig from treating `//` as a comment. The Simulator can reach a local `npx convex dev` backend at `127.0.0.1`. On a physical device, point `CONVEX_URL` at your Mac's LAN hostname (e.g. `http:/$()/mini.local:3210`); the app rewrites storage upload/download URLs so they use that host instead of the backend's `127.0.0.1`.
 
 ### Dev (name-only) sign-in
 

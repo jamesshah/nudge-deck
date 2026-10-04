@@ -91,7 +91,7 @@ struct CompleteProofSheet: View {
     }
 
     private var photoSection: some View {
-        Section("Photo") {
+        Section {
             PhotosPicker(selection: $photoItem, matching: .images) {
                 Label(photoData == nil ? "Choose a photo" : "Choose a different photo", systemImage: "photo.on.rectangle")
             }
@@ -104,11 +104,15 @@ struct CompleteProofSheet: View {
                     .frame(maxHeight: 260)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
+        } header: {
+            Text("Photo")
+        } footer: {
+            Text("Under 3 MB.")
         }
     }
 
     private var audioSection: some View {
-        Section("Voice note") {
+        Section {
             HStack {
                 Button {
                     if recorder.isRecording {
@@ -131,9 +135,10 @@ struct CompleteProofSheet: View {
                 Label("Voice note ready to send", systemImage: "checkmark.circle.fill")
                     .foregroundStyle(Theme.success)
             }
-            Text("Up to \(Int(VoiceRecorder.maxDuration)) seconds.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+        } header: {
+            Text("Voice note")
+        } footer: {
+            Text("Up to \(Int(VoiceRecorder.maxDuration)) seconds, under 3 MB.")
         }
     }
 
@@ -144,10 +149,16 @@ struct CompleteProofSheet: View {
         guard let data = try? await item.loadTransferable(type: Data.self),
               let image = UIImage(data: data)
         else {
+            photoData = nil
             store.errorMessage = "That photo couldn't be loaded. Try another one."
             return
         }
-        photoData = Self.downscaledJPEG(image) ?? data
+        guard let jpeg = Self.downscaledJPEG(image), GameFormatting.isProofFileWithinLimit(jpeg) else {
+            photoData = nil
+            store.errorMessage = GameFormatting.proofFileTooLargeMessage(for: .photo)
+            return
+        }
+        photoData = jpeg
     }
 
     private static func downscaledJPEG(_ image: UIImage, maxDimension: CGFloat = 1600) -> Data? {
@@ -159,7 +170,11 @@ struct CompleteProofSheet: View {
         let resized = UIGraphicsImageRenderer(size: size, format: format).image { _ in
             image.draw(in: CGRect(origin: .zero, size: size))
         }
-        return resized.jpegData(compressionQuality: 0.75)
+        for quality in [0.75, 0.55, 0.4] as [CGFloat] {
+            guard let data = resized.jpegData(compressionQuality: quality) else { continue }
+            if GameFormatting.isProofFileWithinLimit(data) { return data }
+        }
+        return resized.jpegData(compressionQuality: 0.35)
     }
 
     private func submit() async {
