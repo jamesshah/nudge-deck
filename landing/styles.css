@@ -436,6 +436,13 @@ a:hover {
 		var(--canvas-deep);
 }
 
+.download .wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
 .download h2 {
 	margin: 0;
 	font-size: clamp(1.7rem, 6vw, 2.2rem);
@@ -446,6 +453,15 @@ a:hover {
 	margin: 0.65rem auto 1.25rem;
 	max-width: 26rem;
 	color: var(--ink-muted);
+}
+
+.download .app-store-badge {
+	display: inline-flex;
+	justify-content: center;
+}
+
+.download .app-store-badge img {
+	margin-inline: auto;
 }
 
 /* Footer */
@@ -597,6 +613,13 @@ a:hover {
 
 	.feature-mosaic .span-3 {
 		grid-column: span 3;
+	}
+
+	.feature-mosaic .counter-card {
+		grid-column: 3 / 5;
+		justify-self: center;
+		width: 100%;
+		max-width: 16rem;
 	}
 
 	.feature-points {
