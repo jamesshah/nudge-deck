@@ -1,0 +1,14 @@
+// App Store production backend — not wired into project.yml yet.
+// When you have a production Convex deployment:
+// 1. Set CONVEX_URL below to that deployment.
+// 2. In project.yml, add an AppStore configuration that maps Debug/Release-style
+//    configFiles for a new AppStore build configuration to this file (keep Release
+//    pointing at App.xcconfig for TestFlight/staging).
+// 3. Run `xcodegen generate`, commit the project + Info.plist, and add a separate
+//    Xcode Cloud workflow that archives the AppStore configuration.
+//
+// "//" starts a comment in xcconfig files, so the URL is split with $() to keep it intact.
+// CONVEX_URL = https:/$()/YOUR-PRODUCTION.convex.cloud
+
+ENABLE_DEV_SIGNIN = NO
+DEVELOPMENT_TEAM = XH448HPM8W

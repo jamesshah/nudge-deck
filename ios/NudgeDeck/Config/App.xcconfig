@@ -1,3 +1,4 @@
+// Staging / TestFlight backend. Release archives (Xcode Cloud TestFlight) use this file.
 // "//" starts a comment in xcconfig files, so the URL is split with $() to keep it intact.
 CONVEX_URL = https:/$()/loyal-lapwing-231.convex.cloud
 
@@ -5,9 +6,12 @@ CONVEX_URL = https:/$()/loyal-lapwing-231.convex.cloud
 ENABLE_DEV_SIGNIN = NO
 ENABLE_DEV_SIGNIN[config=Debug] = YES
 
-// Set these in Local.xcconfig to enable Sign in with Apple and APNs on a real device:
-//   DEVELOPMENT_TEAM = ABCDE12345
-//   CODE_SIGN_ENTITLEMENTS = Support/NudgeDeck.entitlements
-// Point at a local `npx convex dev` backend with:
+// Apple Developer Team ID (not secret). Required for device/Archive signing locally
+// and helps Xcode Cloud managed signing. Override in Local.xcconfig only if needed.
+DEVELOPMENT_TEAM = XH448HPM8W
+
+// Optional Local.xcconfig (gitignored) overrides, e.g. local Convex:
 //   CONVEX_URL = http:/$()/127.0.0.1:3210
+// For a future App Store backend, use Config/Production.xcconfig + an AppStore
+// Xcode configuration (see README "Staging vs production Convex").
 #include? "Local.xcconfig"

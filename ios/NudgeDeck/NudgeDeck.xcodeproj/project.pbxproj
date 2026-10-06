@@ -1,0 +1,745 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0021685EB3C4150B8C7FEBA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0EB43E938576E8045CB932 /* AppDelegate.swift */; };
+		0402EC4A3BCB1443FFF9E187 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695165D1837B9631F22C92C /* SessionStore.swift */; };
+		0429AF2AA2C3EA132EA606F8 /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5028223F0A1CF7CC71164C3 /* InboxView.swift */; };
+		0B919454EF1EFF8CD42BF10E /* NudgeDeckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB31AF49743C12D7BBBE966 /* NudgeDeckApp.swift */; };
+		0E2E69FE81D4A76DFA81F5BE /* SymbolAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0806686F0CFB920EDB25A /* SymbolAvailabilityTests.swift */; };
+		131AB321A6CA7A765E97AEFD /* ConvexMobile in Frameworks */ = {isa = PBXBuildFile; productRef = B6B946C80904F4111BCF5F5B /* ConvexMobile */; };
+		1473AB361C4F48069EC29F23 /* RecapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C394FAD9A96BBB391D2B11 /* RecapView.swift */; };
+		1ED49DE118A0FF492F29E00F /* GameFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6240129370816EEFE33796 /* GameFormatting.swift */; };
+		2A9AA3C2AB4483805D42B90B /* TimelineScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1303892717D27A7E0D58F986 /* TimelineScreen.swift */; };
+		2B82CDE3D14DDB3DF6D60D94 /* ModelDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AD799AEA2ACFE21F208E15 /* ModelDecodingTests.swift */; };
+		2C6EF3C2DCF74D5667449448 /* GameFormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2BB0D9A1A8EBA3FF94921A /* GameFormattingTests.swift */; };
+		2E1AF3605BCA963C8CEAE440 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9070A4AC9E4FEF4010A3ADFB /* MainTabView.swift */; };
+		303D49FAB0EBA76E040578B3 /* GameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7F4E2998C800B992F6A334 /* GameStore.swift */; };
+		37505BC49A0879C68F71A4AC /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D2AEC6593C930AFC71EB9C /* NotificationRouter.swift */; };
+		3C6D4A665EFD974C5524F99D /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F8179222002EDE9511CE36 /* Theme.swift */; };
+		3CB7224DB8C1F008F94760D3 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DADD5BCEFD87A0C9EE8DF0 /* CardView.swift */; };
+		41DB92227E65042B45FA4E28 /* TwoPlayerSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4FFCA7F101B06BFB095A6A /* TwoPlayerSmokeTests.swift */; };
+		434E2789A90F926FAA757C52 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937B9E0D1011CDBEDEC45C1F /* SettingsView.swift */; };
+		488A6B8FAE250BE6E8F71E94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 757EBE0D21705BC111B20154 /* Assets.xcassets */; };
+		571C140DFF7E694C84CB9125 /* NotificationEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663B90825552FF740535B438 /* NotificationEventTests.swift */; };
+		68FFA7A0E7A1CBDF0E0E157A /* VoiceRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69028F8EDEDFDA6578774F7 /* VoiceRecorder.swift */; };
+		696EFE43A44C319FA5E19BB4 /* PreviewRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B013A9CC1A739B05DBA0BA /* PreviewRenderingTests.swift */; };
+		6B1FC67EC7B857AEF4EAFFFB /* PreviewFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB55DB8873C0AD2AC4E4172 /* PreviewFixtures.swift */; };
+		6D7059F18524FD2896FA319C /* Backend.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2874369EB7662EEA3BD0E7 /* Backend.swift */; };
+		7CE7D9E4FA591B08B1886FC1 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2B504039D0B1E6B7846BC /* Models.swift */; };
+		8828F483C4FCC5D5EED4CA16 /* PushRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F308F4E702BB5EE01642E7E /* PushRegistration.swift */; };
+		95C71CFD5530CE7B76395ECA /* CompleteProofSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CD3E55A5FC3B90056059B4 /* CompleteProofSheet.swift */; };
+		9ACB55246B52289D49CCEB77 /* AppleDisplayName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80ACB8220AD6AE27BB4037F /* AppleDisplayName.swift */; };
+		B2D66305511D6EE89CD4F9EF /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3304AEFB1A2AA0F25CF66 /* SignInView.swift */; };
+		B6E748EAD0F2B4C185E95DB8 /* SeasonActionSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7BBC3C62C9FACAD1D7A5F0 /* SeasonActionSheets.swift */; };
+		C49927FA736CF51A61040AD6 /* HandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99EC1E17662AD1FF94CD8917 /* HandView.swift */; };
+		CDDA4E54C8DBABB0E24921AE /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59901F8DDFA242D998D14BE6 /* PairingView.swift */; };
+		D4569B0A93B6A462C6A43162 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8E3EB89DDBEECB7A4F15CD /* KeychainStore.swift */; };
+		E235B6563C6045A3C9DBE923 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F47A6D7ED9F03E460806177 /* NotificationService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		71D715C9AA2418E4BD6FF1A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9AA5857E77C3D25B0325305 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2DC40C84C7E7169F82557038;
+			remoteInfo = NudgeDeck;
+		};
+		ACA71B7D302EBEA35F7978A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9AA5857E77C3D25B0325305 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2DC40C84C7E7169F82557038;
+			remoteInfo = NudgeDeck;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0A7BBC3C62C9FACAD1D7A5F0 /* SeasonActionSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonActionSheets.swift; sourceTree = "<group>"; };
+		12D2AEC6593C930AFC71EB9C /* NotificationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
+		1303892717D27A7E0D58F986 /* TimelineScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineScreen.swift; sourceTree = "<group>"; };
+		1B454115AC42D8E132A8CE62 /* NudgeDeckTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NudgeDeckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FA3304AEFB1A2AA0F25CF66 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		21DADD5BCEFD87A0C9EE8DF0 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		26F8179222002EDE9511CE36 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		33CD3E55A5FC3B90056059B4 /* CompleteProofSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteProofSheet.swift; sourceTree = "<group>"; };
+		34C394FAD9A96BBB391D2B11 /* RecapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecapView.swift; sourceTree = "<group>"; };
+		3695165D1837B9631F22C92C /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		3AB2B504039D0B1E6B7846BC /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		3B7F4E2998C800B992F6A334 /* GameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStore.swift; sourceTree = "<group>"; };
+		3F47A6D7ED9F03E460806177 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		40D0806686F0CFB920EDB25A /* SymbolAvailabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolAvailabilityTests.swift; sourceTree = "<group>"; };
+		4F308F4E702BB5EE01642E7E /* PushRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushRegistration.swift; sourceTree = "<group>"; };
+		4F4FFCA7F101B06BFB095A6A /* TwoPlayerSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoPlayerSmokeTests.swift; sourceTree = "<group>"; };
+		505BD95AB77630640E6B5BC3 /* NudgeDeck.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NudgeDeck.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53D1D0D5D0BCB28B2C5B172F /* NudgeDeckSmokeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NudgeDeckSmokeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		59901F8DDFA242D998D14BE6 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		5AB55DB8873C0AD2AC4E4172 /* PreviewFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFixtures.swift; sourceTree = "<group>"; };
+		663B90825552FF740535B438 /* NotificationEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationEventTests.swift; sourceTree = "<group>"; };
+		6D0EB43E938576E8045CB932 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		757EBE0D21705BC111B20154 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8F6240129370816EEFE33796 /* GameFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameFormatting.swift; sourceTree = "<group>"; };
+		8FB31AF49743C12D7BBBE966 /* NudgeDeckApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeDeckApp.swift; sourceTree = "<group>"; };
+		9070A4AC9E4FEF4010A3ADFB /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		937B9E0D1011CDBEDEC45C1F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		99EC1E17662AD1FF94CD8917 /* HandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandView.swift; sourceTree = "<group>"; };
+		B74EE3BEF22BB7C69CABA0BE /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
+		BE2874369EB7662EEA3BD0E7 /* Backend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backend.swift; sourceTree = "<group>"; };
+		C1B013A9CC1A739B05DBA0BA /* PreviewRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewRenderingTests.swift; sourceTree = "<group>"; };
+		C8AD799AEA2ACFE21F208E15 /* ModelDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDecodingTests.swift; sourceTree = "<group>"; };
+		CF8E3EB89DDBEECB7A4F15CD /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		E69028F8EDEDFDA6578774F7 /* VoiceRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
+		E80ACB8220AD6AE27BB4037F /* AppleDisplayName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleDisplayName.swift; sourceTree = "<group>"; };
+		F5028223F0A1CF7CC71164C3 /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
+		FF2BB0D9A1A8EBA3FF94921A /* GameFormattingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameFormattingTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EADB30A1BE1E8595593DE9DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				131AB321A6CA7A765E97AEFD /* ConvexMobile in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0076D9EBE60DF96F761F9224 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				757EBE0D21705BC111B20154 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		07B64CB952858052BE084AFE /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				33CD3E55A5FC3B90056059B4 /* CompleteProofSheet.swift */,
+				99EC1E17662AD1FF94CD8917 /* HandView.swift */,
+				F5028223F0A1CF7CC71164C3 /* InboxView.swift */,
+				9070A4AC9E4FEF4010A3ADFB /* MainTabView.swift */,
+				34C394FAD9A96BBB391D2B11 /* RecapView.swift */,
+				0A7BBC3C62C9FACAD1D7A5F0 /* SeasonActionSheets.swift */,
+				937B9E0D1011CDBEDEC45C1F /* SettingsView.swift */,
+				1303892717D27A7E0D58F986 /* TimelineScreen.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		1588654654A375D8740E302E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				21DADD5BCEFD87A0C9EE8DF0 /* CardView.swift */,
+				26F8179222002EDE9511CE36 /* Theme.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		1F6463A6096E4BEEA12945E2 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				59901F8DDFA242D998D14BE6 /* PairingView.swift */,
+				1FA3304AEFB1A2AA0F25CF66 /* SignInView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		30E38F9CDA53C12035BEA9E1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				E80ACB8220AD6AE27BB4037F /* AppleDisplayName.swift */,
+				BE2874369EB7662EEA3BD0E7 /* Backend.swift */,
+				3B7F4E2998C800B992F6A334 /* GameStore.swift */,
+				CF8E3EB89DDBEECB7A4F15CD /* KeychainStore.swift */,
+				12D2AEC6593C930AFC71EB9C /* NotificationRouter.swift */,
+				3F47A6D7ED9F03E460806177 /* NotificationService.swift */,
+				4F308F4E702BB5EE01642E7E /* PushRegistration.swift */,
+				3695165D1837B9631F22C92C /* SessionStore.swift */,
+				E69028F8EDEDFDA6578774F7 /* VoiceRecorder.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4451BFD0A2F034A99AE328B1 /* NudgeDeck */ = {
+			isa = PBXGroup;
+			children = (
+				733C53E30AB21D288F6995C7 /* App */,
+				E20F92DFDE549D7A539354F5 /* Models */,
+				FFD256EE076E33E574EF2AC5 /* Preview Content */,
+				0076D9EBE60DF96F761F9224 /* Resources */,
+				30E38F9CDA53C12035BEA9E1 /* Services */,
+				7D37D6EF8F27638901A0569C /* Views */,
+			);
+			path = NudgeDeck;
+			sourceTree = "<group>";
+		};
+		4833A62E8131D4E92F5D7043 /* NudgeDeckTests */ = {
+			isa = PBXGroup;
+			children = (
+				FF2BB0D9A1A8EBA3FF94921A /* GameFormattingTests.swift */,
+				C8AD799AEA2ACFE21F208E15 /* ModelDecodingTests.swift */,
+				663B90825552FF740535B438 /* NotificationEventTests.swift */,
+				C1B013A9CC1A739B05DBA0BA /* PreviewRenderingTests.swift */,
+				40D0806686F0CFB920EDB25A /* SymbolAvailabilityTests.swift */,
+			);
+			path = NudgeDeckTests;
+			sourceTree = "<group>";
+		};
+		733C53E30AB21D288F6995C7 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				6D0EB43E938576E8045CB932 /* AppDelegate.swift */,
+				8FB31AF49743C12D7BBBE966 /* NudgeDeckApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		7659349D3D2E7F3257A1D2F4 = {
+			isa = PBXGroup;
+			children = (
+				B1464EBA725F71BFA601584C /* Config */,
+				4451BFD0A2F034A99AE328B1 /* NudgeDeck */,
+				97DBE2FC318D08F691F4E562 /* NudgeDeckSmokeUITests */,
+				4833A62E8131D4E92F5D7043 /* NudgeDeckTests */,
+				7B9DAF388B56E87E9BD61D45 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7B9DAF388B56E87E9BD61D45 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				505BD95AB77630640E6B5BC3 /* NudgeDeck.app */,
+				53D1D0D5D0BCB28B2C5B172F /* NudgeDeckSmokeUITests.xctest */,
+				1B454115AC42D8E132A8CE62 /* NudgeDeckTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7D37D6EF8F27638901A0569C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1588654654A375D8740E302E /* Components */,
+				07B64CB952858052BE084AFE /* Game */,
+				1F6463A6096E4BEEA12945E2 /* Onboarding */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		97DBE2FC318D08F691F4E562 /* NudgeDeckSmokeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4F4FFCA7F101B06BFB095A6A /* TwoPlayerSmokeTests.swift */,
+			);
+			path = NudgeDeckSmokeUITests;
+			sourceTree = "<group>";
+		};
+		B1464EBA725F71BFA601584C /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				B74EE3BEF22BB7C69CABA0BE /* App.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		E20F92DFDE549D7A539354F5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8F6240129370816EEFE33796 /* GameFormatting.swift */,
+				3AB2B504039D0B1E6B7846BC /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FFD256EE076E33E574EF2AC5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				5AB55DB8873C0AD2AC4E4172 /* PreviewFixtures.swift */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		12B56B6B73E3651C12F2A17E /* NudgeDeckSmokeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C79477EF5D106612F087103 /* Build configuration list for PBXNativeTarget "NudgeDeckSmokeUITests" */;
+			buildPhases = (
+				EC0522EC32C24B33BA19DEE5 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D86CFB4EA13F79B76564C54F /* PBXTargetDependency */,
+			);
+			name = NudgeDeckSmokeUITests;
+			packageProductDependencies = (
+			);
+			productName = NudgeDeckSmokeUITests;
+			productReference = 53D1D0D5D0BCB28B2C5B172F /* NudgeDeckSmokeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		2DC40C84C7E7169F82557038 /* NudgeDeck */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A3AFFB3FCC6BA278F14297A /* Build configuration list for PBXNativeTarget "NudgeDeck" */;
+			buildPhases = (
+				0A28ED268A0CA1BC15CAE629 /* Sources */,
+				19BF43CBEDC336855FFD3D73 /* Resources */,
+				EADB30A1BE1E8595593DE9DE /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NudgeDeck;
+			packageProductDependencies = (
+				B6B946C80904F4111BCF5F5B /* ConvexMobile */,
+			);
+			productName = NudgeDeck;
+			productReference = 505BD95AB77630640E6B5BC3 /* NudgeDeck.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D886B542C7C5E59AD5D7D052 /* NudgeDeckTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 09F3B4279BBCC5C6D417777A /* Build configuration list for PBXNativeTarget "NudgeDeckTests" */;
+			buildPhases = (
+				D2B23E5DA561F7D86CFDB982 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				49D29D71C3B00F4EE9793626 /* PBXTargetDependency */,
+			);
+			name = NudgeDeckTests;
+			packageProductDependencies = (
+			);
+			productName = NudgeDeckTests;
+			productReference = 1B454115AC42D8E132A8CE62 /* NudgeDeckTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C9AA5857E77C3D25B0325305 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					12B56B6B73E3651C12F2A17E = {
+						TestTargetID = 2DC40C84C7E7169F82557038;
+					};
+					2DC40C84C7E7169F82557038 = {
+						DevelopmentTeam = XH448HPM8W;
+					};
+				};
+			};
+			buildConfigurationList = 166807233C0577B0F3697F2D /* Build configuration list for PBXProject "NudgeDeck" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7659349D3D2E7F3257A1D2F4;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4026C4700F0DB725752F92C7 /* XCRemoteSwiftPackageReference "convex-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7B9DAF388B56E87E9BD61D45 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2DC40C84C7E7169F82557038 /* NudgeDeck */,
+				D886B542C7C5E59AD5D7D052 /* NudgeDeckTests */,
+				12B56B6B73E3651C12F2A17E /* NudgeDeckSmokeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		19BF43CBEDC336855FFD3D73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				488A6B8FAE250BE6E8F71E94 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A28ED268A0CA1BC15CAE629 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0021685EB3C4150B8C7FEBA7 /* AppDelegate.swift in Sources */,
+				9ACB55246B52289D49CCEB77 /* AppleDisplayName.swift in Sources */,
+				6D7059F18524FD2896FA319C /* Backend.swift in Sources */,
+				3CB7224DB8C1F008F94760D3 /* CardView.swift in Sources */,
+				95C71CFD5530CE7B76395ECA /* CompleteProofSheet.swift in Sources */,
+				1ED49DE118A0FF492F29E00F /* GameFormatting.swift in Sources */,
+				303D49FAB0EBA76E040578B3 /* GameStore.swift in Sources */,
+				C49927FA736CF51A61040AD6 /* HandView.swift in Sources */,
+				0429AF2AA2C3EA132EA606F8 /* InboxView.swift in Sources */,
+				D4569B0A93B6A462C6A43162 /* KeychainStore.swift in Sources */,
+				2E1AF3605BCA963C8CEAE440 /* MainTabView.swift in Sources */,
+				7CE7D9E4FA591B08B1886FC1 /* Models.swift in Sources */,
+				37505BC49A0879C68F71A4AC /* NotificationRouter.swift in Sources */,
+				E235B6563C6045A3C9DBE923 /* NotificationService.swift in Sources */,
+				0B919454EF1EFF8CD42BF10E /* NudgeDeckApp.swift in Sources */,
+				CDDA4E54C8DBABB0E24921AE /* PairingView.swift in Sources */,
+				6B1FC67EC7B857AEF4EAFFFB /* PreviewFixtures.swift in Sources */,
+				8828F483C4FCC5D5EED4CA16 /* PushRegistration.swift in Sources */,
+				1473AB361C4F48069EC29F23 /* RecapView.swift in Sources */,
+				B6E748EAD0F2B4C185E95DB8 /* SeasonActionSheets.swift in Sources */,
+				0402EC4A3BCB1443FFF9E187 /* SessionStore.swift in Sources */,
+				434E2789A90F926FAA757C52 /* SettingsView.swift in Sources */,
+				B2D66305511D6EE89CD4F9EF /* SignInView.swift in Sources */,
+				3C6D4A665EFD974C5524F99D /* Theme.swift in Sources */,
+				2A9AA3C2AB4483805D42B90B /* TimelineScreen.swift in Sources */,
+				68FFA7A0E7A1CBDF0E0E157A /* VoiceRecorder.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B23E5DA561F7D86CFDB982 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C6EF3C2DCF74D5667449448 /* GameFormattingTests.swift in Sources */,
+				2B82CDE3D14DDB3DF6D60D94 /* ModelDecodingTests.swift in Sources */,
+				571C140DFF7E694C84CB9125 /* NotificationEventTests.swift in Sources */,
+				696EFE43A44C319FA5E19BB4 /* PreviewRenderingTests.swift in Sources */,
+				0E2E69FE81D4A76DFA81F5BE /* SymbolAvailabilityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC0522EC32C24B33BA19DEE5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41DB92227E65042B45FA4E28 /* TwoPlayerSmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		49D29D71C3B00F4EE9793626 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2DC40C84C7E7169F82557038 /* NudgeDeck */;
+			targetProxy = ACA71B7D302EBEA35F7978A7 /* PBXContainerItemProxy */;
+		};
+		D86CFB4EA13F79B76564C54F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2DC40C84C7E7169F82557038 /* NudgeDeck */;
+			targetProxy = 71D715C9AA2418E4BD6FF1A6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0BF95176C9C6125F9EC0DB04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B74EE3BEF22BB7C69CABA0BE /* App.xcconfig */;
+			buildSettings = {
+				APS_ENVIRONMENT = production;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Support/NudgeDeck.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Support/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		107C759F60197EDC7D482564 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NudgeDeck.app/NudgeDeck";
+			};
+			name = Release;
+		};
+		4B38DA394F2960503720F25A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B74EE3BEF22BB7C69CABA0BE /* App.xcconfig */;
+			buildSettings = {
+				APS_ENVIRONMENT = development;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Support/NudgeDeck.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Support/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5908D007C4FCDD850C6BF40E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck.smokeuitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NudgeDeck;
+			};
+			name = Debug;
+		};
+		95A83F1FC50E464586F6E66F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		98ADFA7BAC856251E825F3FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck.smokeuitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NudgeDeck;
+			};
+			name = Release;
+		};
+		E36AC35B7F2CFE8977FF0ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F8A28652E4784D8FD4B51EED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NudgeDeck.app/NudgeDeck";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		09F3B4279BBCC5C6D417777A /* Build configuration list for PBXNativeTarget "NudgeDeckTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F8A28652E4784D8FD4B51EED /* Debug */,
+				107C759F60197EDC7D482564 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		166807233C0577B0F3697F2D /* Build configuration list for PBXProject "NudgeDeck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E36AC35B7F2CFE8977FF0ED5 /* Debug */,
+				95A83F1FC50E464586F6E66F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1A3AFFB3FCC6BA278F14297A /* Build configuration list for PBXNativeTarget "NudgeDeck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B38DA394F2960503720F25A /* Debug */,
+				0BF95176C9C6125F9EC0DB04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4C79477EF5D106612F087103 /* Build configuration list for PBXNativeTarget "NudgeDeckSmokeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5908D007C4FCDD850C6BF40E /* Debug */,
+				98ADFA7BAC856251E825F3FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4026C4700F0DB725752F92C7 /* XCRemoteSwiftPackageReference "convex-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/get-convex/convex-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B6B946C80904F4111BCF5F5B /* ConvexMobile */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4026C4700F0DB725752F92C7 /* XCRemoteSwiftPackageReference "convex-swift" */;
+			productName = ConvexMobile;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = C9AA5857E77C3D25B0325305 /* Project object */;
+}

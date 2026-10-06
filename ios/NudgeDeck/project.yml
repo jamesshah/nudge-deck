@@ -18,6 +18,10 @@ settings:
     # libconvexmobile-rs ships no x86_64 Simulator slice.
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
 
+# Build configurations:
+# - Debug / Release → Config/App.xcconfig (staging Convex; TestFlight archives use Release)
+# - Future App Store: add an AppStore configuration mapped to Config/Production.xcconfig
+#   and archive that from a separate Xcode Cloud workflow (see README).
 targets:
   NudgeDeck:
     type: application
