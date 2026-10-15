@@ -14,6 +14,8 @@ struct SettingsView: View {
     @State private var showingCustomCard = false
     @State private var confirmingStartNewSeason = false
     @State private var confirmingUnpair = false
+    @State private var confirmingSignOut = false
+    @State private var confirmingDeleteAccount = false
 
     private var me: Player? { store.couple?.me }
     private var canManageSeason: Bool {
@@ -110,7 +112,18 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Button("Sign out", role: .destructive) { Task { await session.signOut() } }
+                    Button("Sign out", role: .destructive) {
+                        confirmingSignOut = true
+                    }
+                    .disabled(session.isWorking)
+                    .accessibilityIdentifier("openSignOut")
+                    Button("Delete account", role: .destructive) {
+                        confirmingDeleteAccount = true
+                    }
+                    .disabled(session.isWorking || store.isWorking)
+                    .accessibilityIdentifier("openDeleteAccount")
+                } footer: {
+                    Text("Delete account permanently removes your profile and unpairs you if you're in a season.")
                 }
             }
             .scrollContentBackground(.hidden)
@@ -125,6 +138,17 @@ struct SettingsView: View {
             .sheet(isPresented: $confirmingUnpair) {
                 UnpairSheet(seasonAlreadyOver: seasonAlreadyOver)
                     .presentationDetents([.medium])
+                    .environmentObject(store)
+            }
+            .sheet(isPresented: $confirmingSignOut) {
+                SignOutSheet()
+                    .presentationDetents([.medium])
+                    .environmentObject(session)
+            }
+            .sheet(isPresented: $confirmingDeleteAccount) {
+                DeleteAccountSheet()
+                    .presentationDetents([.medium])
+                    .environmentObject(session)
                     .environmentObject(store)
             }
             .onAppear(perform: loadFromProfile)

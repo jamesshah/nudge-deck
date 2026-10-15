@@ -579,6 +579,37 @@ describe("rules", () => {
     await expect(t.mutation(api.couples.unpair, { sessionToken: alice })).rejects.toThrow(/Cancel the invite/);
   });
 
+  test("deleteAccount removes the user and unpairs their partner", async () => {
+    const { t, alice, bob } = await setupCouple();
+    const coupleId = (await t.query(api.couples.current, { sessionToken: alice }))!._id;
+    const aliceId = (await t.query(api.users.me, { sessionToken: alice }))!._id;
+    await t.mutation(api.users.deleteAccount, { sessionToken: alice });
+    expect(await t.query(api.users.me, { sessionToken: alice })).toBeNull();
+    expect(await t.query(api.couples.current, { sessionToken: bob })).toBeNull();
+    expect((await t.query(api.users.me, { sessionToken: bob }))?.coupleId).toBeUndefined();
+    const archived = await t.run(async (ctx) => ctx.db.get("couples", coupleId));
+    expect(archived?.deletedAt).toBeDefined();
+    expect(archived?.status).toBe("ended");
+    const gone = await t.run(async (ctx) => ctx.db.get("users", aliceId));
+    expect(gone).toBeNull();
+  });
+
+  test("deleteAccount cancels a waiting invite", async () => {
+    const t = convexTest(schema, modules);
+    await t.mutation(internal.seed.run, {});
+    const alice = await t.mutation(api.auth.signInDev, {
+      name: "Alice",
+      timeZone: "UTC",
+      utcOffsetMinutes: 0,
+    });
+    await t.mutation(api.couples.create, { sessionToken: alice, timeframeDays: 7 });
+    const coupleId = (await t.query(api.couples.current, { sessionToken: alice }))!._id;
+    await t.mutation(api.users.deleteAccount, { sessionToken: alice });
+    expect(await t.query(api.users.me, { sessionToken: alice })).toBeNull();
+    const couple = await t.run(async (ctx) => ctx.db.get("couples", coupleId));
+    expect(couple).toBeNull();
+  });
+
   test("startNewSeason from an active season deals a fresh deck", async () => {
     const { t, alice, bob } = await setupCouple();
     const oldId = (await t.query(api.couples.current, { sessionToken: alice }))!._id;
