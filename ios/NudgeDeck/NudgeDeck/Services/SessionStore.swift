@@ -2,6 +2,7 @@ import AuthenticationServices
 import Combine
 import ConvexMobile
 import Foundation
+import PostHog
 
 @MainActor
 final class SessionStore: ObservableObject {
@@ -169,7 +170,16 @@ final class SessionStore: ObservableObject {
                     if let me {
                         let wasSignedIn = self.token != nil
                         self.state = .signedIn(token: token, me: me)
-                        if !wasSignedIn { PushRegistration.shared.sessionDidStart(token: token) }
+                        if !wasSignedIn {
+                            PostHogSDK.shared.identify(
+                                me.id,
+                                userProperties: [
+                                    "name": me.name,
+                                    "is_dev_account": me.isDevAccount,
+                                ]
+                            )
+                            PushRegistration.shared.sessionDidStart(token: token)
+                        }
                     } else {
                         self.endSession()
                     }
@@ -178,6 +188,7 @@ final class SessionStore: ObservableObject {
     }
 
     private func endSession() {
+        PostHogSDK.shared.reset()
         meSubscription = nil
         KeychainStore.deleteToken()
         state = .signedOut

@@ -12,3 +12,8 @@
 
 ENABLE_DEV_SIGNIN = NO
 DEVELOPMENT_TEAM = XH448HPM8W
+
+// PostHog analytics (public client token; not a secret).
+// Staging App.xcconfig omits these; set them here or in Local.xcconfig.
+POSTHOG_PROJECT_TOKEN = phc_xtgCStgfkk5MX6TwmZVCVMRvJdYPEFvMPrjGkNh85CjA
+POSTHOG_HOST = https:/$()/us.i.posthog.com
