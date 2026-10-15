@@ -136,9 +136,28 @@ final class SessionStore: ObservableObject {
 
     func signOut() async {
         guard let token, let client else { return }
+        isWorking = true
+        defer { isWorking = false }
         PushRegistration.shared.sessionDidEnd()
         try? await client.mutation("auth:signOut", with: ["sessionToken": token])
         endSession()
+    }
+
+    /// Permanently deletes the account on the server, then clears the local session.
+    @discardableResult
+    func deleteAccount() async -> Bool {
+        guard let token, let client else { return false }
+        isWorking = true
+        defer { isWorking = false }
+        do {
+            try await client.mutation("users:deleteAccount", with: ["sessionToken": token])
+            PushRegistration.shared.sessionDidEnd()
+            endSession()
+            return true
+        } catch {
+            errorMessage = Backend.message(for: error)
+            return false
+        }
     }
 
     private func signIn(_ call: @escaping () async throws -> String) async {

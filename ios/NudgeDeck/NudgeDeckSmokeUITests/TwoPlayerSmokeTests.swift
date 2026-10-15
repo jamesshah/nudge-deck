@@ -13,6 +13,8 @@ final class TwoPlayerSmokeTests: XCTestCase {
         continueAfterFailure = false
         app.launchArguments += [
             "-EnableDevSignIn", "YES",
+            // Simulator often can't resolve LAN .local hosts from Local.xcconfig.
+            "-ConvexURL", "http://127.0.0.1:3210",
             "-handDisplayMode", "cards",
             "-handCategoryFilter", "All",
         ]
@@ -124,9 +126,17 @@ final class TwoPlayerSmokeTests: XCTestCase {
         let settingsTab = app.tabBars.buttons["Settings"]
         if settingsTab.exists {
             settingsTab.tap()
-            let signOut = app.buttons["Sign out"]
-            for _ in 0..<4 where !signOut.isHittable { app.swipeUp() }
-            signOut.tap()
+            let signOut = app.buttons["openSignOut"]
+            for _ in 0..<4 where !signOut.waitForExistence(timeout: 1) || !signOut.isHittable {
+                app.swipeUp()
+            }
+            if signOut.exists {
+                signOut.tap()
+                let confirm = app.buttons["confirmSignOut"]
+                if confirm.waitForExistence(timeout: 3) { confirm.tap() }
+            } else if app.buttons["Sign out"].exists {
+                app.buttons["Sign out"].firstMatch.tap()
+            }
         } else if app.buttons["Sign out"].exists {
             app.buttons["Sign out"].firstMatch.tap()
         }
@@ -152,6 +162,133 @@ final class TwoPlayerSmokeTests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+}
+
+/// Settings account sheets against a local Convex deployment + Simulator.
+final class AccountSettingsUITests: XCTestCase {
+    private let app = XCUIApplication()
+    private let partner = PartnerClient(baseURL: URL(string: "http://127.0.0.1:3210")!)
+    private let suffix = String(Int(Date().timeIntervalSince1970) % 100_000)
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        app.launchArguments += [
+            "-EnableDevSignIn", "YES",
+            "-ConvexURL", "http://127.0.0.1:3210",
+        ]
+        app.launch()
+    }
+
+    func testSignOutAndDeleteAccountSheets() throws {
+        let nameField = app.textFields["Your name"]
+        signOutIfNeeded(nameField)
+        XCTAssertTrue(nameField.waitForExistence(timeout: 20))
+
+        // Sign in + pair so Settings is available.
+        let alex = "AlexAcct\(suffix)"
+        try signInDev(as: alex)
+        let create = app.buttons["Create invite"]
+        XCTAssertTrue(create.waitForExistence(timeout: 15), "Pairing screen didn't appear after sign-in. \(app.debugDescription)")
+        create.tap()
+        let codeLabel = app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "^[A-Z0-9]{6}$")).firstMatch
+        XCTAssertTrue(codeLabel.waitForExistence(timeout: 15))
+        try partner.signIn(name: "BlairAcct\(suffix)")
+        try partner.mutation("couples:join", ["inviteCode": codeLabel.label])
+        XCTAssertTrue(app.tabBars.buttons["Settings"].waitForExistence(timeout: 20))
+        dismissNotificationPrompt()
+
+        // Sign out: open sheet, cancel, then confirm.
+        openSettingsAccountSection()
+        app.buttons["openSignOut"].tap()
+        XCTAssertTrue(app.staticTexts["Sign out?"].waitForExistence(timeout: 5))
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+
+        app.buttons["openSignOut"].tap()
+        XCTAssertTrue(app.staticTexts["Sign out?"].waitForExistence(timeout: 5))
+        app.buttons["confirmSignOut"].tap()
+        XCTAssertTrue(nameField.waitForExistence(timeout: 15), "Sign out should return to sign-in")
+
+        // Sign in again, pair, delete account: cancel then confirm.
+        try signInDev(as: alex)
+        XCTAssertTrue(create.waitForExistence(timeout: 15), "Pairing screen didn't appear after re-sign-in. \(app.debugDescription)")
+        create.tap()
+        XCTAssertTrue(codeLabel.waitForExistence(timeout: 15))
+        try partner.signIn(name: "BlairAcct2\(suffix)")
+        try partner.mutation("couples:join", ["inviteCode": codeLabel.label])
+        XCTAssertTrue(app.tabBars.buttons["Settings"].waitForExistence(timeout: 20))
+        dismissNotificationPrompt()
+
+        openSettingsAccountSection()
+        app.buttons["openDeleteAccount"].tap()
+        XCTAssertTrue(app.staticTexts["Delete account?"].waitForExistence(timeout: 5))
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+
+        app.buttons["openDeleteAccount"].tap()
+        XCTAssertTrue(app.staticTexts["Delete account?"].waitForExistence(timeout: 5))
+        app.buttons["confirmDeleteAccount"].tap()
+        XCTAssertTrue(nameField.waitForExistence(timeout: 15), "Delete account should return to sign-in")
+
+        // Partner should be unpaired after delete.
+        let couple = try partner.query("couples:current")
+        XCTAssertTrue(couple is NSNull, "Partner should be unpaired after account delete")
+    }
+
+    private func openSettingsAccountSection() {
+        app.tabBars.buttons["Settings"].tap()
+        let signOut = app.buttons["openSignOut"]
+        for _ in 0..<6 where !signOut.isHittable { app.swipeUp() }
+        XCTAssertTrue(signOut.waitForExistence(timeout: 5))
+    }
+
+    /// Prefer keyboard Go — the on-screen Start button is often covered by the keyboard.
+    private func signInDev(as name: String) throws {
+        let nameField = app.textFields["Your name"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 10))
+        nameField.tap()
+        nameField.typeText(name)
+        if app.keyboards.buttons["Go"].waitForExistence(timeout: 2) {
+            app.keyboards.buttons["go"].tap()
+        } else if app.keyboards.buttons["go"].waitForExistence(timeout: 1) {
+            app.keyboards.buttons["go"].tap()
+        } else {
+            app.buttons["Start"].tap()
+        }
+        dismissNotificationPrompt()
+        if app.alerts.firstMatch.waitForExistence(timeout: 1) {
+            let message = app.alerts.firstMatch.label
+            app.alerts.buttons.firstMatch.tap()
+            XCTFail("Sign-in showed an alert: \(message)")
+        }
+    }
+
+    private func signOutIfNeeded(_ nameField: XCUIElement) {
+        if nameField.waitForExistence(timeout: 8) { return }
+        let settingsTab = app.tabBars.buttons["Settings"]
+        if settingsTab.exists {
+            settingsTab.tap()
+            let signOut = app.buttons["openSignOut"]
+            for _ in 0..<4 where !signOut.waitForExistence(timeout: 1) || !signOut.isHittable {
+                app.swipeUp()
+            }
+            if signOut.exists {
+                signOut.tap()
+                let confirm = app.buttons["confirmSignOut"]
+                if confirm.waitForExistence(timeout: 3) { confirm.tap() }
+            } else if app.buttons["Sign out"].exists {
+                // Pairing screen still uses a plain Sign out button.
+                app.buttons["Sign out"].firstMatch.tap()
+            }
+        } else if app.buttons["Sign out"].exists {
+            app.buttons["Sign out"].firstMatch.tap()
+        }
+    }
+    private func dismissNotificationPrompt(timeout: TimeInterval = 3) {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let allow = springboard.alerts.buttons["Allow"]
+        if allow.waitForExistence(timeout: timeout) { allow.tap() }
     }
 }
 
