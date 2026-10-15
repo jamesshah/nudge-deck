@@ -101,7 +101,7 @@ git add NudgeDeck.xcodeproj Support/Info.plist
 open NudgeDeck.xcodeproj
 ```
 
-A fresh clone can open the committed project without XcodeGen. Run tests:
+A fresh clone can open the committed project without XcodeGen. Pull requests run [Backend and iOS](.github/workflows/ci.yml) as separate GitHub Actions jobs, and both have to pass before the pull request can merge. Run the same tests locally:
 
 ```bash
 cd ios/NudgeDeck
@@ -219,7 +219,7 @@ One workflow archives **Release** (`App.xcconfig` staging Convex) once and posts
 
 ### Cut a build
 
-Merges to `main` do this automatically. [`.github/workflows/testflight.yml`](.github/workflows/testflight.yml) runs the backend tests, deploys the **staging** Convex deployment (`loyal-lapwing-231`, the backend TestFlight builds use), then pushes a tag like `tf-0.1.0.42`. Xcode Cloud’s TestFlight workflow starts on tags beginning with `tf-` and uploads an internal TestFlight build. `ios/NudgeDeck/ci_scripts/ci_post_clone.sh` sets `CURRENT_PROJECT_VERSION` from Xcode Cloud’s `CI_BUILD_NUMBER` so each upload has a new build number.
+Merges to `main` do this automatically, after the pull request’s Backend and iOS checks have passed. [`.github/workflows/testflight.yml`](.github/workflows/testflight.yml) runs the backend tests again, deploys the **staging** Convex deployment (`loyal-lapwing-231`, the backend TestFlight builds use), then pushes a tag like `tf-0.1.0.42`. Xcode Cloud’s TestFlight workflow starts on tags beginning with `tf-` and uploads an internal TestFlight build. `ios/NudgeDeck/ci_scripts/ci_post_clone.sh` sets `CURRENT_PROJECT_VERSION` from Xcode Cloud’s `CI_BUILD_NUMBER` so each upload has a new build number.
 
 Add a repository secret named `CONVEX_DEPLOY_KEY`: the **production deploy key** for `loyal-lapwing-231` (Convex dashboard → that deployment → Settings → Deploy keys). A preview deploy key would create a preview deployment instead of updating staging. Do not put the App Store deployment’s key here; TestFlight still talks to staging.
 
