@@ -12,6 +12,6 @@ DEVELOPMENT_TEAM = XH448HPM8W
 
 // Optional Local.xcconfig (gitignored) overrides, e.g. local Convex:
 //   CONVEX_URL = http:/$()/127.0.0.1:3210
-// For a future App Store backend, use Config/Production.xcconfig + an AppStore
-// Xcode configuration (see README "Staging vs production Convex").
+// App Store archives use Config/Production.xcconfig via the AppStore configuration
+// (see README "Staging vs production Convex").
 #include? "Local.xcconfig"

@@ -51,7 +51,7 @@ xcodebuild test -project NudgeDeck.xcodeproj -scheme NudgeDeck \
 
 - Dev sign-in needs **both** app `ENABLE_DEV_SIGNIN` and backend `ALLOW_DEV_SIGNIN=true`.
 - Override Convex URL locally via gitignored `ios/NudgeDeck/Config/Local.xcconfig` (see README for the `$()` xcconfig `//` trick).
-- `Config/App.xcconfig` is the **staging / TestFlight** Convex URL; keep `ALLOW_DEV_SIGNIN` off on that deployment. App Store production URL goes in `Config/Production.xcconfig` later (see README).
+- `Config/App.xcconfig` is the **staging / TestFlight** Convex URL; keep `ALLOW_DEV_SIGNIN` off on that deployment. App Store uses the **AppStore** configuration + `Config/Production.xcconfig` (archive via `NudgeDeckAppStore`).
 
 ## When changing rules
 

@@ -1,0 +1,66 @@
+# After a merge to main: test and deploy the staging Convex backend that
+# TestFlight builds use, then push a tf-* tag. Xcode Cloud's TestFlight
+# workflow starts on tags beginning with "tf-" and uploads an internal build.
+#
+# CONVEX_DEPLOY_KEY must be the production deploy key for loyal-lapwing-231.
+# A preview deploy key would create a preview deployment named after the branch
+# instead of updating staging. The App Store backend is a different deployment.
+name: TestFlight
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "landing/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: testflight-main
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Test backend
+        working-directory: backend
+        run: |
+          npm ci
+          npm test
+
+      - name: Deploy staging Convex
+        working-directory: backend
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+        run: |
+          npx convex deploy
+          npx convex run seed:run
+
+      - name: Tag for Xcode Cloud
+        run: |
+          set -eu
+          version=$(sed -n 's/^[[:space:]]*MARKETING_VERSION: "\(.*\)"/\1/p' ios/NudgeDeck/project.yml)
+          if [ -z "$version" ]; then
+            echo "MARKETING_VERSION not found in project.yml" >&2
+            exit 1
+          fi
+          tag="tf-${version}.${GITHUB_RUN_NUMBER}"
+          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+            tag="tf-${version}.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+          fi
+          git tag "$tag"
+          git push origin "$tag"
+          echo "Pushed ${tag}"

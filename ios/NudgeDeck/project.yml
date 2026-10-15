@@ -4,6 +4,8 @@ options:
   deploymentTarget:
     iOS: "17.0"
   createIntermediateGroups: true
+  # Without this, xcodebuild would pick AppStore (first alphabetically).
+  defaultConfig: Debug
 
 packages:
   ConvexMobile:
@@ -18,10 +20,13 @@ settings:
     # libconvexmobile-rs ships no x86_64 Simulator slice.
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
 
-# Build configurations:
-# - Debug / Release → Config/App.xcconfig (staging Convex; TestFlight archives use Release)
-# - Future App Store: add an AppStore configuration mapped to Config/Production.xcconfig
-#   and archive that from a separate Xcode Cloud workflow (see README).
+# Debug / Release → Config/App.xcconfig (staging Convex; TestFlight archives use Release).
+# AppStore → Config/Production.xcconfig (App Store; archive via the NudgeDeckAppStore scheme).
+configs:
+  Debug: debug
+  Release: release
+  AppStore: release
+
 targets:
   NudgeDeck:
     type: application
@@ -31,6 +36,7 @@ targets:
     configFiles:
       Debug: Config/App.xcconfig
       Release: Config/App.xcconfig
+      AppStore: Config/Production.xcconfig
     info:
       path: Support/Info.plist
       properties:
@@ -58,6 +64,8 @@ targets:
         Debug:
           APS_ENVIRONMENT: development
         Release:
+          APS_ENVIRONMENT: production
+        AppStore:
           APS_ENVIRONMENT: production
     dependencies:
       - package: ConvexMobile
@@ -92,6 +100,20 @@ targets:
       - target: NudgeDeck
 
 schemes:
+  NudgeDeckAppStore:
+    build:
+      targets:
+        NudgeDeck: all
+    run:
+      config: AppStore
+    test:
+      config: AppStore
+    profile:
+      config: AppStore
+    analyze:
+      config: AppStore
+    archive:
+      config: AppStore
   NudgeDeckSmoke:
     build:
       targets:
