@@ -1,0 +1,87 @@
+# Required before a pull request can merge into main.
+# Backend and iOS are separate jobs so one suite cannot hide a failure in the other.
+name: CI
+
+on:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Test
+        working-directory: backend
+        run: |
+          npm ci
+          npm test
+
+  ios:
+    name: iOS
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select iPhone simulator
+        id: simulator
+        run: |
+          set -eu
+          device=$(python3 - <<'PY'
+          import json, subprocess, sys
+          raw = subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"])
+          data = json.loads(raw)
+          names = []
+          for runtime, devices in data.get("devices", {}).items():
+              if "iOS" not in runtime:
+                  continue
+              for device in devices:
+                  if device.get("isAvailable") and device["name"].startswith("iPhone"):
+                      names.append(device["name"])
+          for preferred in ("iPhone 16", "iPhone 17", "iPhone 15"):
+              if preferred in names:
+                  print(preferred)
+                  sys.exit(0)
+          if not names:
+              sys.exit("No available iPhone simulator")
+          print(names[-1])
+          PY
+          )
+          echo "name=$device" >> "$GITHUB_OUTPUT"
+          echo "Using $device"
+          xcodebuild -version
+
+      - name: Unit tests
+        working-directory: ios/NudgeDeck
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project NudgeDeck.xcodeproj \
+            -scheme NudgeDeck \
+            -destination "platform=iOS Simulator,name=${{ steps.simulator.outputs.name }}" \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Build App Store configuration
+        working-directory: ios/NudgeDeck
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project NudgeDeck.xcodeproj \
+            -scheme NudgeDeckAppStore \
+            -destination "platform=iOS Simulator,name=${{ steps.simulator.outputs.name }}" \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO

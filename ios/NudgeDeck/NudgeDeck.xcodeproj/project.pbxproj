@@ -82,6 +82,7 @@
 		53D1D0D5D0BCB28B2C5B172F /* NudgeDeckSmokeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NudgeDeckSmokeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		59901F8DDFA242D998D14BE6 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
 		5AB55DB8873C0AD2AC4E4172 /* PreviewFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFixtures.swift; sourceTree = "<group>"; };
+		5F8CD92FD758D2E44A0AEDE3 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
 		663B90825552FF740535B438 /* NotificationEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationEventTests.swift; sourceTree = "<group>"; };
 		6D0EB43E938576E8045CB932 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		757EBE0D21705BC111B20154 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -249,6 +250,7 @@
 			isa = PBXGroup;
 			children = (
 				B74EE3BEF22BB7C69CABA0BE /* App.xcconfig */,
+				5F8CD92FD758D2E44A0AEDE3 /* Production.xcconfig */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -452,6 +454,23 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		08AB54077063259FA2DBD358 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NudgeDeck.app/NudgeDeck";
+			};
+			name = AppStore;
+		};
 		0BF95176C9C6125F9EC0DB04 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B74EE3BEF22BB7C69CABA0BE /* App.xcconfig */;
@@ -525,6 +544,26 @@
 				TEST_TARGET_NAME = NudgeDeck;
 			};
 			name = Debug;
+		};
+		8B141B117B6FCB5E85A857F1 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5F8CD92FD758D2E44A0AEDE3 /* Production.xcconfig */;
+			buildSettings = {
+				APS_ENVIRONMENT = production;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Support/NudgeDeck.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Support/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = AppStore;
 		};
 		95A83F1FC50E464586F6E66F /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -601,6 +640,82 @@
 				TEST_TARGET_NAME = NudgeDeck;
 			};
 			name = Release;
+		};
+		C041B161524A406F1838CBA7 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = AppStore;
+		};
+		DFC41EC6FA735E54F5DB548B /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamesshah.nudgedeck.smokeuitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NudgeDeck;
+			};
+			name = AppStore;
 		};
 		E36AC35B7F2CFE8977FF0ED5 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -691,6 +806,7 @@
 		09F3B4279BBCC5C6D417777A /* Build configuration list for PBXNativeTarget "NudgeDeckTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
+				08AB54077063259FA2DBD358 /* AppStore */,
 				F8A28652E4784D8FD4B51EED /* Debug */,
 				107C759F60197EDC7D482564 /* Release */,
 			);
@@ -700,6 +816,7 @@
 		166807233C0577B0F3697F2D /* Build configuration list for PBXProject "NudgeDeck" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
+				C041B161524A406F1838CBA7 /* AppStore */,
 				E36AC35B7F2CFE8977FF0ED5 /* Debug */,
 				95A83F1FC50E464586F6E66F /* Release */,
 			);
@@ -709,6 +826,7 @@
 		1A3AFFB3FCC6BA278F14297A /* Build configuration list for PBXNativeTarget "NudgeDeck" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
+				8B141B117B6FCB5E85A857F1 /* AppStore */,
 				4B38DA394F2960503720F25A /* Debug */,
 				0BF95176C9C6125F9EC0DB04 /* Release */,
 			);
@@ -718,6 +836,7 @@
 		4C79477EF5D106612F087103 /* Build configuration list for PBXNativeTarget "NudgeDeckSmokeUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
+				DFC41EC6FA735E54F5DB548B /* AppStore */,
 				5908D007C4FCDD850C6BF40E /* Debug */,
 				98ADFA7BAC856251E825F3FA /* Release */,
 			);
