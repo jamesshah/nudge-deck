@@ -24,6 +24,8 @@
 	<string>$(CONVEX_URL)</string>
 	<key>ENABLE_DEV_SIGNIN</key>
 	<string>$(ENABLE_DEV_SIGNIN)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
