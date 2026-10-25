@@ -8,7 +8,10 @@ enum AppConfig {
     static let appStoreURL = URL(string: "https://apps.apple.com/app/nudge-deck/id6817191350")!
 
     static var convexURL: String {
-        resolveConvexURL(Bundle.main.object(forInfoDictionaryKey: "CONVEX_URL") as? String)
+        resolveConvexURL(
+            launchArgument("ConvexURL")
+                ?? Bundle.main.object(forInfoDictionaryKey: "CONVEX_URL") as? String
+        )
     }
 
     /// Whether to show the name-only test sign-in. Never available in Release builds.
@@ -16,7 +19,8 @@ enum AppConfig {
         #if DEBUG
         resolveDevSignIn(
             buildSetting: Bundle.main.object(forInfoDictionaryKey: "ENABLE_DEV_SIGNIN") as? String,
-            launchOverride: UserDefaults.standard.object(forKey: "EnableDevSignIn") as? String
+            launchOverride: launchArgument("EnableDevSignIn")
+                ?? UserDefaults.standard.object(forKey: "EnableDevSignIn") as? String
         )
         #else
         false
@@ -27,6 +31,14 @@ enum AppConfig {
     static func resolveDevSignIn(buildSetting: String?, launchOverride: String?) -> Bool {
         let value = launchOverride ?? buildSetting ?? ""
         return ["YES", "TRUE", "1"].contains(value.trimmingCharacters(in: .whitespaces).uppercased())
+    }
+
+    /// Reads `-Key value` pairs from the process launch arguments (used by UI tests).
+    static func launchArgument(_ key: String) -> String? {
+        let args = ProcessInfo.processInfo.arguments
+        guard let index = args.firstIndex(of: "-\(key)"), index + 1 < args.count else { return nil }
+        let value = args[index + 1]
+        return value.hasPrefix("-") ? nil : value
     }
 
     /// Falls back to the production deployment if the build setting is missing or unexpanded.

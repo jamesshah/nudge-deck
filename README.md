@@ -219,15 +219,15 @@ One workflow archives **Release** (`App.xcconfig` staging Convex) once and posts
 
 ### Cut a build
 
-Merges to `main` do this automatically, after the pull request’s Backend and iOS checks have passed. [`.github/workflows/testflight.yml`](.github/workflows/testflight.yml) runs the backend tests again, deploys the **staging** Convex deployment (`loyal-lapwing-231`, the backend TestFlight builds use), then pushes a tag like `tf-0.1.0.42`. Xcode Cloud’s TestFlight workflow starts on tags beginning with `tf-` and uploads an internal TestFlight build. `ios/NudgeDeck/ci_scripts/ci_post_clone.sh` sets `CURRENT_PROJECT_VERSION` from Xcode Cloud’s `CI_BUILD_NUMBER` so each upload has a new build number.
+Merges to `main` do this automatically, after the pull request’s Backend and iOS checks have passed. [`.github/workflows/testflight.yml`](.github/workflows/testflight.yml) runs the backend tests again, deploys the **staging** Convex deployment (`loyal-lapwing-231`, the backend TestFlight builds use), then pushes a tag like `tf-1.0.1.42`. Xcode Cloud’s TestFlight workflow starts on tags beginning with `tf-` and uploads an internal TestFlight build. `ios/NudgeDeck/ci_scripts/ci_post_clone.sh` sets `CURRENT_PROJECT_VERSION` from Xcode Cloud’s `CI_BUILD_NUMBER` so each upload has a new build number. Marketing version is **1.0.1** (`1.0.0` is already on the App Store). `ITSAppUsesNonExemptEncryption` is `false` in Info.plist so App Store Connect does not hold the build on Missing Compliance, which otherwise leaves the TestFlight Internal Testing post-action stuck.
 
 Add a repository secret named `CONVEX_DEPLOY_KEY`: the **production deploy key** for `loyal-lapwing-231` (Convex dashboard → that deployment → Settings → Deploy keys). A preview deploy key would create a preview deployment instead of updating staging. Do not put the App Store deployment’s key here; TestFlight still talks to staging.
 
 You can still tag by hand:
 
 ```bash
-git tag tf-0.1.0.1
-git push origin tf-0.1.0.1
+git tag tf-1.0.1.1
+git push origin tf-1.0.1.1
 ```
 
 Or start the workflow manually from Xcode / App Store Connect. A manual tag does not deploy Convex.
