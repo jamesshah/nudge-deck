@@ -3,6 +3,10 @@ import PostHog
 
 enum PostHogConfiguration {
     static func setup() {
+        // XCTest launches the app host. Staging App.xcconfig omits the token, and
+        // assertionFailure in DEBUG would crash the suite before any test runs.
+        if isRunningTests { return }
+
         guard let projectToken = value(for: "POSTHOG_PROJECT_TOKEN") else {
             reportMissingConfiguration("POSTHOG_PROJECT_TOKEN")
             return
@@ -29,8 +33,13 @@ enum PostHogConfiguration {
         return value
     }
 
+    private static var isRunningTests: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
+
     private static func reportMissingConfiguration(_ key: String) {
         #if DEBUG
+        guard !isRunningTests else { return }
         assertionFailure("\(key) variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once \(key) is configured")
         #endif
     }
