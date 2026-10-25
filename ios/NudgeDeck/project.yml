@@ -11,6 +11,9 @@ packages:
   ConvexMobile:
     url: https://github.com/get-convex/convex-swift
     from: 0.8.1
+  PostHog:
+    url: https://github.com/PostHog/posthog-ios.git
+    from: 3.59.3
 
 settings:
   base:
@@ -45,6 +48,8 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CONVEX_URL: $(CONVEX_URL)
         ENABLE_DEV_SIGNIN: $(ENABLE_DEV_SIGNIN)
+        POSTHOG_PROJECT_TOKEN: $(POSTHOG_PROJECT_TOKEN)
+        POSTHOG_HOST: $(POSTHOG_HOST)
         # HTTPS-only (TLS) is exempt. This skips App Store Connect's Missing
         # Compliance gate so Xcode Cloud can finish TestFlight Internal Testing.
         ITSAppUsesNonExemptEncryption: false
@@ -73,6 +78,7 @@ targets:
     dependencies:
       - package: ConvexMobile
         product: ConvexMobile
+      - package: PostHog
     scheme:
       testTargets:
         - NudgeDeckTests

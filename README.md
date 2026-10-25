@@ -135,6 +135,8 @@ CONVEX_URL = http:/$()/127.0.0.1:3210
 
 The `$()` keeps xcconfig from treating `//` as a comment. The Simulator can reach a local `npx convex dev` backend at `127.0.0.1`. On a physical device, point `CONVEX_URL` at your Mac's LAN hostname (e.g. `http:/$()/mini.local:3210`); the app rewrites storage upload/download URLs so they use that host instead of the backend's `127.0.0.1`.
 
+PostHog (`POSTHOG_PROJECT_TOKEN`, `POSTHOG_HOST`) is set in `Config/Production.xcconfig` for now. Without those values `PostHogConfiguration` skips setup and events are dropped. Staging `App.xcconfig` omits them; override in `Local.xcconfig` for a Debug build.
+
 ### Dev (name-only) sign-in
 
 The **Quick sign-in for testing** panel needs both switches on:

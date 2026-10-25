@@ -1,6 +1,7 @@
 import Combine
 import ConvexMobile
 import Foundation
+import PostHog
 
 /// Live game state for the signed-in player, backed by Convex subscriptions.
 @MainActor
@@ -94,8 +95,10 @@ final class GameStore: ObservableObject {
         defer { isWorking = false }
         do {
             try await client.mutation(name, with: fullArgs)
+            PostHogLog.info("game_mutation_succeeded")
             return true
         } catch {
+            PostHogLog.error("game_mutation_failed")
             errorMessage = Backend.message(for: error)
             return false
         }
@@ -111,26 +114,36 @@ final class GameStore: ObservableObject {
     // MARK: Pairing
 
     func createCouple(timeframeDays: Int) async {
-        await run("couples:create", ["timeframeDays": Double(timeframeDays)])
+        guard await run("couples:create", ["timeframeDays": Double(timeframeDays)]) else { return }
+        PostHogSDK.shared.capture("couple_created", properties: ["timeframe_days": timeframeDays])
     }
 
     @discardableResult
     func joinCouple(code: String) async -> Bool {
-        await run("couples:join", ["inviteCode": GameFormatting.normalizedInviteCode(code)])
+        let joined = await run("couples:join", ["inviteCode": GameFormatting.normalizedInviteCode(code)])
+        if joined { PostHogSDK.shared.capture("couple_joined") }
+        return joined
     }
 
     func cancelInvite() async {
-        await run("couples:cancelInvite")
+        guard await run("couples:cancelInvite") else { return }
+        PostHogSDK.shared.capture("invite_cancelled")
     }
 
     @discardableResult
     func unpair() async -> Bool {
-        await run("couples:unpair")
+        let unpaired = await run("couples:unpair")
+        if unpaired { PostHogSDK.shared.capture("couple_unpaired") }
+        return unpaired
     }
 
     @discardableResult
     func startNewSeason(timeframeDays: Int) async -> Bool {
-        await run("couples:startNewSeason", ["timeframeDays": Double(timeframeDays)])
+        let started = await run("couples:startNewSeason", ["timeframeDays": Double(timeframeDays)])
+        if started {
+            PostHogSDK.shared.capture("season_started", properties: ["timeframe_days": timeframeDays])
+        }
+        return started
     }
 
     // MARK: Cards
@@ -139,22 +152,32 @@ final class GameStore: ObservableObject {
     func play(_ card: HandCard, stackedOn play: Play?) async -> Bool {
         var args: [String: ConvexEncodable?] = ["handId": card.handId]
         if let play { args["stackedOnPlayId"] = play.id }
-        return await run("plays:playCard", args)
+        let sent = await run("plays:playCard", args)
+        if sent {
+            PostHogSDK.shared.capture("nudge_sent", properties: ["is_stacked": play != nil])
+        }
+        return sent
     }
 
     @discardableResult
     func counter(_ play: Play, with card: HandCard) async -> Bool {
-        await run("plays:counter", ["handId": card.handId, "targetPlayId": play.id])
+        let countered = await run("plays:counter", ["handId": card.handId, "targetPlayId": play.id])
+        if countered { PostHogSDK.shared.capture("nudge_countered") }
+        return countered
     }
 
     @discardableResult
     func refuse(_ play: Play) async -> Bool {
-        await run("plays:refuse", ["playId": play.id])
+        let refused = await run("plays:refuse", ["playId": play.id])
+        if refused { PostHogSDK.shared.capture("nudge_passed") }
+        return refused
     }
 
     @discardableResult
     func completeWithText(_ play: Play, text: String) async -> Bool {
-        await run("plays:completeWithProof", ["playId": play.id, "proofType": "text", "proofText": text])
+        let submitted = await run("plays:completeWithProof", ["playId": play.id, "proofType": "text", "proofText": text])
+        if submitted { PostHogSDK.shared.capture("proof_submitted", properties: ["proof_type": "text"]) }
+        return submitted
     }
 
     @discardableResult
@@ -173,7 +196,11 @@ final class GameStore: ObservableObject {
                 "proofStorageId": storageId,
             ]
             if let caption, !caption.isEmpty { args["proofText"] = caption }
-            return await run("plays:completeWithProof", args)
+            let submitted = await run("plays:completeWithProof", args)
+            if submitted {
+                PostHogSDK.shared.capture("proof_submitted", properties: ["proof_type": type.rawValue])
+            }
+            return submitted
         } catch {
             errorMessage = Backend.message(for: error)
             return false
@@ -181,16 +208,20 @@ final class GameStore: ObservableObject {
     }
 
     func acceptProof(_ play: Play) async {
-        await run("plays:acceptProof", ["playId": play.id])
+        guard await run("plays:acceptProof", ["playId": play.id]) else { return }
+        PostHogSDK.shared.capture("proof_accepted")
     }
 
     func rejectProof(_ play: Play, note: String) async {
-        await run("plays:rejectProof", ["playId": play.id, "note": note])
+        guard await run("plays:rejectProof", ["playId": play.id, "note": note]) else { return }
+        PostHogSDK.shared.capture("proof_rejected")
     }
 
     @discardableResult
     func createCustomCard(title: String, body: String) async -> Bool {
-        await run("cards:createCustom", ["title": title, "body": body])
+        let created = await run("cards:createCustom", ["title": title, "body": body])
+        if created { PostHogSDK.shared.capture("custom_nudge_created") }
+        return created
     }
 
     // MARK: Settings
@@ -202,7 +233,9 @@ final class GameStore: ObservableObject {
             args["startMinutes"] = Double(startMinutes)
             args["endMinutes"] = Double(endMinutes)
         }
-        return await run("users:setQuietHours", args)
+        let updated = await run("users:setQuietHours", args)
+        if updated { PostHogSDK.shared.capture("quiet_hours_updated", properties: ["is_enabled": startMinutes != nil]) }
+        return updated
     }
 
     func rename(to name: String) async {

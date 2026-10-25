@@ -6,6 +6,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        PostHogConfiguration.setup()
         UNUserNotificationCenter.current().delegate = self
         Theme.configureTabBarAppearance()
         if let userInfo = launchOptions?[.remoteNotification] as? [AnyHashable: Any] {

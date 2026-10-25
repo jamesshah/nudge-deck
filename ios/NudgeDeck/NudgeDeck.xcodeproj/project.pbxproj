@@ -13,6 +13,7 @@
 		0B919454EF1EFF8CD42BF10E /* NudgeDeckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB31AF49743C12D7BBBE966 /* NudgeDeckApp.swift */; };
 		0E2E69FE81D4A76DFA81F5BE /* SymbolAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0806686F0CFB920EDB25A /* SymbolAvailabilityTests.swift */; };
 		131AB321A6CA7A765E97AEFD /* ConvexMobile in Frameworks */ = {isa = PBXBuildFile; productRef = B6B946C80904F4111BCF5F5B /* ConvexMobile */; };
+		142B511C99694C2A35055415 /* PostHogLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B98212FE145DC434EF1C98 /* PostHogLog.swift */; };
 		1473AB361C4F48069EC29F23 /* RecapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C394FAD9A96BBB391D2B11 /* RecapView.swift */; };
 		1ED49DE118A0FF492F29E00F /* GameFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6240129370816EEFE33796 /* GameFormatting.swift */; };
 		2A9AA3C2AB4483805D42B90B /* TimelineScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1303892717D27A7E0D58F986 /* TimelineScreen.swift */; };
@@ -25,6 +26,7 @@
 		3CB7224DB8C1F008F94760D3 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DADD5BCEFD87A0C9EE8DF0 /* CardView.swift */; };
 		41DB92227E65042B45FA4E28 /* TwoPlayerSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4FFCA7F101B06BFB095A6A /* TwoPlayerSmokeTests.swift */; };
 		434E2789A90F926FAA757C52 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937B9E0D1011CDBEDEC45C1F /* SettingsView.swift */; };
+		43CE5D836231EEA414FC1EDA /* PostHogConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357006D24AC4FD358B7267F9 /* PostHogConfiguration.swift */; };
 		488A6B8FAE250BE6E8F71E94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 757EBE0D21705BC111B20154 /* Assets.xcassets */; };
 		571C140DFF7E694C84CB9125 /* NotificationEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663B90825552FF740535B438 /* NotificationEventTests.swift */; };
 		68FFA7A0E7A1CBDF0E0E157A /* VoiceRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69028F8EDEDFDA6578774F7 /* VoiceRecorder.swift */; };
@@ -42,6 +44,7 @@
 		D4569B0A93B6A462C6A43162 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8E3EB89DDBEECB7A4F15CD /* KeychainStore.swift */; };
 		E235B6563C6045A3C9DBE923 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F47A6D7ED9F03E460806177 /* NotificationService.swift */; };
 		F81706E992FECD5F68F0EE74 /* AccountActionSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E2FE3FCC6428127691A0D /* AccountActionSheets.swift */; };
+		FA8939360EBADC4C9517DB2B /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 0109A6EFAFE459802DB0AD0B /* PostHog */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +74,9 @@
 		26F8179222002EDE9511CE36 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		33CD3E55A5FC3B90056059B4 /* CompleteProofSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteProofSheet.swift; sourceTree = "<group>"; };
 		34C394FAD9A96BBB391D2B11 /* RecapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecapView.swift; sourceTree = "<group>"; };
+		357006D24AC4FD358B7267F9 /* PostHogConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogConfiguration.swift; sourceTree = "<group>"; };
 		3695165D1837B9631F22C92C /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		36B98212FE145DC434EF1C98 /* PostHogLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogLog.swift; sourceTree = "<group>"; };
 		3AB2B504039D0B1E6B7846BC /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		3B7F4E2998C800B992F6A334 /* GameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStore.swift; sourceTree = "<group>"; };
 		3F47A6D7ED9F03E460806177 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
@@ -109,6 +114,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				131AB321A6CA7A765E97AEFD /* ConvexMobile in Frameworks */,
+				FA8939360EBADC4C9517DB2B /* PostHog in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +209,8 @@
 			children = (
 				6D0EB43E938576E8045CB932 /* AppDelegate.swift */,
 				8FB31AF49743C12D7BBBE966 /* NudgeDeckApp.swift */,
+				357006D24AC4FD358B7267F9 /* PostHogConfiguration.swift */,
+				36B98212FE145DC434EF1C98 /* PostHogLog.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -308,6 +316,7 @@
 			name = NudgeDeck;
 			packageProductDependencies = (
 				B6B946C80904F4111BCF5F5B /* ConvexMobile */,
+				0109A6EFAFE459802DB0AD0B /* PostHog */,
 			);
 			productName = NudgeDeck;
 			productReference = 505BD95AB77630640E6B5BC3 /* NudgeDeck.app */;
@@ -359,6 +368,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4026C4700F0DB725752F92C7 /* XCRemoteSwiftPackageReference "convex-swift" */,
+				265238A749CA8FDEF9711116 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7B9DAF388B56E87E9BD61D45 /* Products */;
@@ -405,6 +415,8 @@
 				E235B6563C6045A3C9DBE923 /* NotificationService.swift in Sources */,
 				0B919454EF1EFF8CD42BF10E /* NudgeDeckApp.swift in Sources */,
 				CDDA4E54C8DBABB0E24921AE /* PairingView.swift in Sources */,
+				43CE5D836231EEA414FC1EDA /* PostHogConfiguration.swift in Sources */,
+				142B511C99694C2A35055415 /* PostHogLog.swift in Sources */,
 				6B1FC67EC7B857AEF4EAFFFB /* PreviewFixtures.swift in Sources */,
 				8828F483C4FCC5D5EED4CA16 /* PushRegistration.swift in Sources */,
 				1473AB361C4F48069EC29F23 /* RecapView.swift in Sources */,
@@ -846,6 +858,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		265238A749CA8FDEF9711116 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.59.3;
+			};
+		};
 		4026C4700F0DB725752F92C7 /* XCRemoteSwiftPackageReference "convex-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/get-convex/convex-swift";
@@ -857,6 +877,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0109A6EFAFE459802DB0AD0B /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 265238A749CA8FDEF9711116 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
 		B6B946C80904F4111BCF5F5B /* ConvexMobile */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4026C4700F0DB725752F92C7 /* XCRemoteSwiftPackageReference "convex-swift" */;
