@@ -40,7 +40,7 @@ ios/NudgeDeck/       SwiftUI app
   NudgeDeck.xcodeproj/  generated project (committed for Xcode Cloud)
   Support/Info.plist    generated (committed)
   Config/App.xcconfig   staging / TestFlight CONVEX_URL + team
-  Config/Production.xcconfig  future App Store Convex URL (not wired yet)
+  Config/Production.xcconfig  App Store Convex URL (AppStore configuration)
   NudgeDeck/         app sources
   NudgeDeckTests/    unit tests
 ```
@@ -101,7 +101,7 @@ git add NudgeDeck.xcodeproj Support/Info.plist
 open NudgeDeck.xcodeproj
 ```
 
-A fresh clone can open the committed project without XcodeGen. Run tests:
+A fresh clone can open the committed project without XcodeGen. Pull requests run [Backend and iOS](.github/workflows/ci.yml) as separate GitHub Actions jobs, and both have to pass before the pull request can merge. Run the same tests locally:
 
 ```bash
 cd ios/NudgeDeck
@@ -117,9 +117,9 @@ Swift Package Manager fetches ConvexMobile on first build.
 | --- | --- | --- | --- |
 | Local Debug | Debug | `App.xcconfig` (+ optional `Local.xcconfig`) | staging or local |
 | TestFlight | **Release** | **`App.xcconfig`** | staging (`loyal-lapwing-231`) |
-| App Store (later) | **AppStore** (add when ready) | **`Production.xcconfig`** | production deployment |
+| App Store | **AppStore** (`NudgeDeckAppStore` scheme) | **`Production.xcconfig`** | production (`woozy-chihuahua-280`) |
 
-TestFlight and App Store both archive as Release-style builds today, so Debug vs Release alone cannot split backends. Keep TestFlight on Release + `App.xcconfig`. When you have a production Convex URL, fill in `Config/Production.xcconfig`, add an `AppStore` configuration in `project.yml`, regenerate/commit the project, and use a **separate** Xcode Cloud workflow that archives `AppStore` (manual / `appstore-*` tags) so you do not burn free hours by accident.
+TestFlight and App Store both need Release-style optimization, so Debug vs Release alone cannot split backends. Keep TestFlight on the **NudgeDeck** scheme (Release + `App.xcconfig`). Archive App Store builds with **NudgeDeckAppStore** (`AppStore` + `Production.xcconfig`). Use a **separate** Xcode Cloud workflow that archives `NudgeDeckAppStore` (manual / `appstore-*` tags) so you do not burn free hours by accident.
 
 ### Canvas previews
 
@@ -214,17 +214,23 @@ One workflow archives **Release** (`App.xcconfig` staging Convex) once and posts
 
 - **Actions:** Archive only (no Test action)
 - **Start conditions:** Manual + Git tags matching `tf-*` (branch changes off)
-- **Distribution:** Internal + External post-actions on the same archive
-- Roughly 2–4 tagged builds per week stays well under 25 hours
+- **Distribution:** Internal TestFlight (the workflow’s post-action)
+- Every merge to `main` (except landing-only commits) deploys staging Convex and pushes a `tf-*` tag, which starts this workflow. Frequent merges spend the free hours faster than 2–4 builds a week.
 
 ### Cut a build
+
+Merges to `main` do this automatically, after the pull request’s Backend and iOS checks have passed. [`.github/workflows/testflight.yml`](.github/workflows/testflight.yml) runs the backend tests again, deploys the **staging** Convex deployment (`loyal-lapwing-231`, the backend TestFlight builds use), then pushes a tag like `tf-0.1.0.42`. Xcode Cloud’s TestFlight workflow starts on tags beginning with `tf-` and uploads an internal TestFlight build. `ios/NudgeDeck/ci_scripts/ci_post_clone.sh` sets `CURRENT_PROJECT_VERSION` from Xcode Cloud’s `CI_BUILD_NUMBER` so each upload has a new build number.
+
+Add a repository secret named `CONVEX_DEPLOY_KEY`: the **production deploy key** for `loyal-lapwing-231` (Convex dashboard → that deployment → Settings → Deploy keys). A preview deploy key would create a preview deployment instead of updating staging. Do not put the App Store deployment’s key here; TestFlight still talks to staging.
+
+You can still tag by hand:
 
 ```bash
 git tag tf-0.1.0.1
 git push origin tf-0.1.0.1
 ```
 
-Or start the workflow manually from Xcode / App Store Connect.
+Or start the workflow manually from Xcode / App Store Connect. A manual tag does not deploy Convex.
 
 ### 1. App Store Connect TestFlight groups
 
